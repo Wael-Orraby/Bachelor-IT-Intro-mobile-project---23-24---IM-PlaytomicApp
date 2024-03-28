@@ -1,0 +1,1 @@
+# Bachelor-IT-Intro-mobile-project---23-24---IM-PlaytomicApp
