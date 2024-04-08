@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "769291960577",
+    "project_id": "playtomicappfirebase",
+    "storage_bucket": "playtomicappfirebase.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:769291960577:android:116a28e1e55467e7005b00",
+        "android_client_info": {
+          "package_name": "com.example.playtomic_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB-9lGo1n7V7rXljANc9e_yRWOhp8-B940"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
