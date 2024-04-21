@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:playtomic_app/components/button/cbuttonstyle.dart';
 
 enum ButtonType {
   PRIMARY,
@@ -6,13 +7,13 @@ enum ButtonType {
   DARK
 }
 
-class Button extends StatelessWidget{
+class CButton extends StatelessWidget{
   final ButtonType style;
   final String text; 
   final VoidCallback onPressed;
 
   // Constructor with a key parameter
-  const Button({
+  const CButton({
     super.key,
     required this.style,
     required this.text,
@@ -21,27 +22,13 @@ class Button extends StatelessWidget{
 
   @override
   Widget build(BuildContext context) {
+    CButtonStyle.setStyle(style);
     return createButton(style, text, onPressed);
   }
 
   static Widget createButton(ButtonType style, String text, VoidCallback onPressed) {
-    Color buttonColor;
-    Color textColor;
-
-    switch (style) {
-      case ButtonType.PRIMARY:
-        buttonColor = Colors.blue;
-        textColor = Colors.white;
-        break;
-      case ButtonType.SECONDARY:
-        buttonColor = Colors.grey;
-        textColor = Colors.black;
-        break;
-      case ButtonType.DARK:
-        buttonColor = Colors.black;
-        textColor = Colors.white;
-        break;
-    }
+    Color buttonColor = CButtonStyle.buttonColor;
+    Color textColor = CButtonStyle.textColor;
     // return
     return ElevatedButton(
       style: ElevatedButton.styleFrom(
