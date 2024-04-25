@@ -1,60 +1,56 @@
 import 'package:flutter/material.dart';
+import 'package:playtomic_app/components/image/cimagestyle.dart';
 
-enum Style { DEFAULT, MODERN, VINTAGE }
+enum ImageStyle { DEFAULT,ROUND, ROUND_SHADOW, SHADOW, }
 
-class MyClass extends StatelessWidget {
-  final Style style;
-  final String image;
+class CImage extends StatelessWidget {
+  final ImageStyle style;
+  final String imagePath;
   final double width;
   final double height;
 
-  MyClass({required this.style, required this.image, required this.width, required this.height});
+  const CImage({super.key, required this.style, required this.imagePath, required this.width, required this.height});
 
   @override
   Widget build(BuildContext context) {
+    CImageStyle.setStyle(style);
+    
     return Container(
-      decoration: _getStyleDecoration(),
+      decoration:BoxDecoration(
+        // Default style decoration
+        borderRadius: CImageStyle.borderRadius,
+         boxShadow: [
+            BoxShadow(
+              color: CImageStyle.shadowColor,
+              spreadRadius: CImageStyle.spreadRadius,
+              blurRadius: CImageStyle.blurRadius,
+              offset: CImageStyle.shadowOffset,
+            ),
+          ],
+      ),
       width: width,
       height: height,
-      child: Image.asset(
-        image,
-        fit: BoxFit.cover,
-      ),
+        child: ClipRRect(
+         borderRadius: CImageStyle.borderRadius,
+          child: image()
+          ),
     );
   }
 
-  BoxDecoration _getStyleDecoration() {
-    switch (style) {
-      case Style.DEFAULT:
-        return BoxDecoration(
-          // Default style decoration
-          border: Border.all(color: Colors.black),
-          borderRadius: BorderRadius.circular(8.0),
-        );
-      case Style.MODERN:
-        return const BoxDecoration(
-          // Modern style decoration
-          gradient: LinearGradient(
-            colors: [Colors.blue, Colors.green],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ),
-        );
-      case Style.VINTAGE:
-        return BoxDecoration(
-          // Vintage style decoration
-          color: Colors.brown,
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.5),
-              spreadRadius: 3,
-              blurRadius: 7,
-              offset:const Offset(0, 3),
-            ),
-          ],
-        );
-      default:
-        return const BoxDecoration(); // Return an empty decoration for unknown styles
+  Widget image(){
+    if(imagePath.contains("http")){
+      return Image.network(
+        imagePath,
+        fit: BoxFit.cover,
+      );
+    }
+    else{
+      return Image.asset(
+        imagePath,
+        
+        fit: BoxFit.cover,
+      );
     }
   }
+
 }
