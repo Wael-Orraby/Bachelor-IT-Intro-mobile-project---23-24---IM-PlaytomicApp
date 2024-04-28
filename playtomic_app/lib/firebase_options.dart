@@ -44,14 +44,13 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyDsDOfXs6XiZyrTM1wDQ-rwNMAm94_Hw1w',
-    appId: '1:769291960577:web:774fb80eacd56bc3005b00',
-    messagingSenderId: '769291960577',
-    projectId: 'playtomicappfirebase',
-    authDomain: 'playtomicappfirebase.firebaseapp.com',
-    storageBucket: 'playtomicappfirebase.appspot.com',
-    measurementId: 'G-WNM7K8V2NS',
-  );
+      apiKey: "AIzaSyDsDOfXs6XiZyrTM1wDQ-rwNMAm94_Hw1w",
+      authDomain: "playtomicappfirebase.firebaseapp.com",
+      projectId: "playtomicappfirebase",
+      storageBucket: "playtomicappfirebase.appspot.com",
+      messagingSenderId: "769291960577",
+      appId: "1:769291960577:web:774fb80eacd56bc3005b00",
+      measurementId: "G-WNM7K8V2NS");
 
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyB-9lGo1n7V7rXljANc9e_yRWOhp8-B940',
