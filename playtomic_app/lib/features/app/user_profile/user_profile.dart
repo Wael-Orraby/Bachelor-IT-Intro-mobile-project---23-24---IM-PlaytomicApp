@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:playtomic_app/components/image/cimage.dart';
+import 'package:playtomic_app/features/app/user_profile/profile_wigets/profile_about.dart';
 import 'package:playtomic_app/features/app/user_profile/profile_wigets/profile_title.dart';
 
 
@@ -18,11 +19,13 @@ class _UserProfilePage extends State<UserProfilePage> {
           automaticallyImplyLeading: false,
           title: const Text("User Account"),
         ),
-        body:const Row( 
-          children: [
-           ProfileTitle()
-          ]
-        ),
+       body: const Column(
+  children: [
+    ProfileTitle(),
+    ProfileAbout(),
+  ],
+),
+
     );
   }
 }
