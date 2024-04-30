@@ -36,8 +36,7 @@ class HomePage extends StatefulWidget {
   _HomePageState createState() => _HomePageState();
 }
 
-class _HomePageState extends State {
-// Add necessary variables here
+class _HomePageState extends State<HomePage> {
   late DateTime _focusedDay;
   late ValueNotifier<DateTime> _selectedDay;
   late CollectionReference _fieldsCollection;
@@ -95,11 +94,20 @@ class _HomePageState extends State {
                 } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
                   return const Text('Geen velden beschikbaar');
                 } else {
+                  // Filter de velden op basis van de geselecteerde datum
+                  final filteredFields = snapshot.data!.where((field) =>
+                      field.availableDates.contains(
+                          DateFormat('dd/MM').format(_selectedDay.value)));
+
+                  if (filteredFields.isEmpty) {
+                    return const Text('Geen velden beschikbaar op deze datum');
+                  }
+
                   return ListView.builder(
-                    itemCount: snapshot.data!.length,
+                    itemCount: filteredFields.length,
                     itemBuilder: (context, index) {
                       return FieldListItem(
-                        field: snapshot.data![index],
+                        field: filteredFields.elementAt(index),
                         selectedDay: _selectedDay,
                       );
                     },
@@ -119,16 +127,16 @@ class FieldListItem extends StatelessWidget {
   final ValueNotifier<DateTime> selectedDay;
 
   const FieldListItem({
-    super.key,
+    Key? key,
     required this.field,
     required this.selectedDay,
-  });
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        _showReservationDialog(context, field);
+        _showAvailableTimesDialog(context, field);
       },
       child: Card(
         margin: const EdgeInsets.all(10),
@@ -171,83 +179,31 @@ class FieldListItem extends StatelessWidget {
     );
   }
 
-  void _showReservationDialog(BuildContext context, Field field) {
-    final List<String> futureAvailableTimes =
-        field.availableTimes.where((time) {
-      final String startTime = time.split(' - ')[0];
-      final DateTime startDateTime = DateFormat('h:mm a').parse(startTime);
-
-      final DateTime selectedDateTime = DateTime(
-        selectedDay.value.year,
-        selectedDay.value.month,
-        selectedDay.value.day,
-        startDateTime.hour,
-        startDateTime.minute,
-      );
-
-      final bool isToday = isSameDay(selectedDay.value, DateTime.now());
-      final bool isFuture = selectedDateTime.isAfter(DateTime.now()) ||
-          (isToday && startDateTime.hour >= DateTime.now().hour);
-      return isFuture;
-    }).toList();
-
-    if (futureAvailableTimes.isEmpty) {
-      // Toon een melding als er geen beschikbare tijden zijn
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: const Text('Geen beschikbare tijden'),
-            content: Text(
-                'Er zijn geen beschikbare tijden voor ${field.name} op deze dag.'),
-            actions: <Widget>[
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
+  void _showAvailableTimesDialog(BuildContext context, Field field) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Beschikbare tijden voor ${field.name}'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: field.availableTimes.map((time) {
+              return ListTile(
+                title: Text(time),
+                onTap: () {
+                  _handleReservation(context, field, time);
                 },
-                child: const Text('OK'),
-              ),
-            ],
-          );
-        },
-      );
-    } else {
-      // Toon het reserveringsdialoogvenster als er beschikbare tijden zijn
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text('Reserve ${field.name}'),
-            content: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: futureAvailableTimes.map((time) {
-                return ListTile(
-                  title: Text(time),
-                  onTap: () {
-                    // Verwijder de tijd uit beschikbare tijden en pas het formaat aan
-                    final String formattedTime =
-                        time.replaceAll(RegExp(r' - .*'), '');
-                    _handleReservation(context, field, formattedTime);
-                    field.availableTimes.remove(
-                        time); // Verwijder de tijd uit beschikbare tijden
-                  },
-                );
-              }).toList(),
-            ),
-          );
-        },
-      );
-    }
+              );
+            }).toList(),
+          ),
+        );
+      },
+    );
   }
 
   void _handleReservation(
       BuildContext context, Field field, String time) async {
     Navigator.pop(context);
-
-    // Formatteren van de geselecteerde tijd
-    final formattedTime = DateFormat('h:mm a').format(
-      DateFormat('h:mm a').parse(time),
-    );
 
     try {
       final currentUser = FirebaseAuth.instance.currentUser;
@@ -258,29 +214,27 @@ class FieldListItem extends StatelessWidget {
           'userId': currentUser.uid,
           'fieldId': field.documentId,
           'time': time,
-          'selectedDate': DateFormat('yyyy-MM-dd').format(selectedDay.value),
           'createdAt': FieldValue.serverTimestamp(),
         });
 
-        final formattedDateTime = DateFormat('h:mm a').parse(formattedTime);
-        final matchingTime = field.availableTimes.firstWhere((time) {
-          final timeRange = time.split(' - ');
-          final startTime = DateFormat('h:mm a').parse(timeRange[0]);
-          final endTime = DateFormat('h:mm a').parse(timeRange[1]);
-          return formattedDateTime == startTime;
-        }, orElse: () => "");
+        // Zoek de index van de tijd in availableTimes
+        final int index = field.availableTimes.indexOf(time);
+        if (index != -1) {
+          // Verwijder de tijd op basis van de index
+          field.availableTimes.removeAt(index);
 
-        if (matchingTime != null) {
+          // Werk het veld bij in Firestore met de bijgewerkte lijst van beschikbare tijden
           await FirebaseFirestore.instance
               .collection('fields')
               .doc(field.documentId)
               .update({
-            'available_times': FieldValue.arrayRemove([matchingTime]),
+            'available_times': field.availableTimes,
           });
-          showToast(message: 'Reserved ${field.name} at $time');
-        } else {
-          print('Time $formattedTime not found in availableTimes array');
         }
+
+        showToast(message: 'Reserved ${field.name} at $time');
+      } else {
+        showToast(message: 'User not logged in');
       }
     } catch (e) {
       print('Error adding reservation: $e');
@@ -290,29 +244,32 @@ class FieldListItem extends StatelessWidget {
 }
 
 class Field {
-  final String
-      documentId; // Voeg een attribuut toe om het document-ID op te slaan
+  final String documentId;
   final String name;
   final String location;
-  final List<String> availableTimes;
   final String imageUrl;
+  final List<String> availableTimes;
+  final List<String> availableDates; // Voeg beschikbare datums toe
 
   Field({
-    required this.documentId, // Voeg documentId toe aan de constructor
+    required this.documentId,
     required this.name,
     required this.location,
     required this.availableTimes,
+    required this.availableDates,
     required this.imageUrl,
   });
 
   factory Field.fromSnapshot(DocumentSnapshot snapshot) {
     final data = snapshot.data() as Map<String, dynamic>;
     return Field(
-      documentId: snapshot.id, // Sla het document-ID op
+      documentId: snapshot.id,
       name: data['name'] ?? '',
       location: data['location'] ?? '',
-      availableTimes: List<String>.from(data['available_times'] ?? []),
       imageUrl: data['image_url'] ?? '',
+      availableTimes: List<String>.from(data['available_times'] ?? []),
+      availableDates: List<String>.from(data['available_dates'] ??
+          []), // Haal beschikbare datums op uit Firestore
     );
   }
 }
