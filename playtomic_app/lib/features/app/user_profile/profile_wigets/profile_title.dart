@@ -125,7 +125,8 @@ class _ProfileTitleState extends State<ProfileTitle> {
                   style: ButtonType.SECONDARY,
                   text: "Log Out",
                   onPressed: () {
-                    // Implement Log Out functionality here
+                    UserData.logOut();
+                    Navigator.pushNamed(context, "/login");
                   },
                 ),
               ],
@@ -162,6 +163,7 @@ class _ProfileTitleState extends State<ProfileTitle> {
                 editProfile();
                 Navigator.pop(context);
                 _textEditingController.clear();
+                UserData.saveData();
               },
             ),
           ],

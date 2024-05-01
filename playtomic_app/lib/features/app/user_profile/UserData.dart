@@ -6,8 +6,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:playtomic_app/features/user_auth/presentation/pages/home_page.dart';
 
 class UserData {
-  static String? userId = 'n3DEgoZvQVP2dSvtohA9pKjHqNo2';
-  static String? email = "wael1@gmail.com";
+  static String? documentId;
+  static String? userId; // 'n3DEgoZvQVP2dSvtohA9pKjHqNo2';
+  static String? email; // "wael1@gmail.com";
   static String? name;
   static String? country;
   // FIELDS ID's
@@ -21,7 +22,9 @@ class UserData {
     CollectionReference? fieldsCollection = FirebaseFirestore.instance.collection('fields');
 
     // Count documents in collections
-    QuerySnapshot reservationsSnapshot = await reservationsCollection.get();
+      QuerySnapshot reservationsSnapshot = await reservationsCollection
+      .where('userId', isEqualTo: userId)
+      .get();
 
       List<Field> fields = [];
 
@@ -48,15 +51,34 @@ class UserData {
 
     if (querySnapshot.docs.isNotEmpty) {
       DocumentSnapshot userDataSnapshot = querySnapshot.docs.first;
+       documentId = userDataSnapshot.id;
+       print(documentId);
       // Access the user data
       name = userDataSnapshot['username'];
       country = userDataSnapshot['country'];
+      
       // You can update other UserData fields similarly
     } else {
       print('User not found');
     }
   }
-
+  static Future<void> saveData() async {
+    // print("username: " + name);
+    // print("email: " + email);
+    // print("playing: " + currentGame!.documentId,);
+    // print("username: " + name);
+    FirebaseFirestore.instance
+        .collection('users') // Specify the collection
+        .doc(documentId) // Specify the document ID
+        .set({
+          'username': name,
+          'country': country,
+          'playing': currentGame!.documentId,
+          'email': email,
+        })
+        .then((value) => print('Data saved successfully'))
+        .catchError((error) => print('Failed to save data: $error'));
+  }
   static void logOut(){
     clearUser();
     FirebaseAuth.instance.signOut();

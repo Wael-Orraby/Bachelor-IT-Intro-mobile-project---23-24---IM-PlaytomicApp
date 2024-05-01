@@ -17,8 +17,6 @@ class _UserProfilePageState extends State<UserProfilePage> {
     super.initState();
   }
 
-
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -29,7 +27,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
           title: const Text("User Account"),
         ),
       ),
-      body: Column(
+      body: const Column(
         children: [
           ProfileTitle(),
           ProfileAbout(),
