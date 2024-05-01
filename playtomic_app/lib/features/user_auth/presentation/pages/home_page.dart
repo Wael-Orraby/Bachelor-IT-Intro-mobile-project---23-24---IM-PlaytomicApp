@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
+import 'package:playtomic_app/features/user_auth/presentation/pages/club_locations_page.dart';
 import 'package:playtomic_app/features/user_auth/presentation/pages/login_page.dart';
 import 'package:playtomic_app/global/common/toast.dart';
 import 'package:table_calendar/table_calendar.dart';
@@ -9,6 +10,8 @@ import 'package:table_calendar/table_calendar.dart';
 void main() {
   runApp(const MyApp());
 }
+
+final RouteObserver<PageRoute> routeObserver = RouteObserver<PageRoute>();
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key});
@@ -24,8 +27,62 @@ class MyApp extends StatelessWidget {
       routes: {
         '/': (context) => const HomePage(),
         '/login': (context) => const LoginPage(),
+        '/club_locations': (context) => ClubLocationsPage(),
+      },
+      // Plaats BottomNavigationBar buiten Scaffold
+      home: Scaffold(
+        body: const HomePage(),
+        bottomNavigationBar: const MyBottomNavigationBar(),
+      ),
+    );
+  }
+}
+
+// BottomNavigationBar aparte widget maken
+class MyBottomNavigationBar extends StatelessWidget {
+  const MyBottomNavigationBar({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return BottomNavigationBar(
+      items: const <BottomNavigationBarItem>[
+        BottomNavigationBarItem(
+          icon: Icon(Icons.home),
+          label: 'Home',
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.location_on),
+          label: 'Clublocaties',
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.account_circle),
+          label: 'Profile',
+        ),
+      ],
+      currentIndex: _currentIndex(context),
+      selectedItemColor: Colors.blue,
+      unselectedItemColor: Colors.grey,
+      onTap: (index) {
+        _onItemTapped(context, index);
       },
     );
+  }
+
+  int _currentIndex(BuildContext context) {
+    if (ModalRoute.of(context)?.settings.name == '/home') {
+      return 0;
+    } else if (ModalRoute.of(context)?.settings.name == '/club_locations') {
+      return 1;
+    }
+    return 0;
+  }
+
+  void _onItemTapped(BuildContext context, int index) {
+    if (index == 0) {
+      Navigator.pushNamed(context, '/home');
+    } else if (index == 1) {
+      Navigator.pushNamed(context, '/club_locations');
+    }
   }
 }
 
@@ -118,6 +175,7 @@ class _HomePageState extends State<HomePage> {
           ),
         ],
       ),
+      bottomNavigationBar: MyBottomNavigationBar(),
     );
   }
 }
