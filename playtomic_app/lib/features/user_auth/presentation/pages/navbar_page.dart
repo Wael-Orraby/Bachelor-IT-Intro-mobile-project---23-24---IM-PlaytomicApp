@@ -29,20 +29,31 @@ class MyBottomNavigationBar extends StatelessWidget {
     );
   }
 
-  int _currentIndex(BuildContext context) {
-    if (ModalRoute.of(context)?.settings.name == '/home') {
-      return 0;
-    } else if (ModalRoute.of(context)?.settings.name == '/club_locations') {
-      return 1;
+int _currentIndex(BuildContext context) {
+
+    switch (ModalRoute.of(context)?.settings.name) {
+      case '/home':
+        return 0;
+      case '/club_locations':
+        return 1;
+      case '/profile':
+        return 2;
     }
     return 0;
   }
 
   void _onItemTapped(BuildContext context, int index) {
-    if (index == 0) {
-      Navigator.pushNamed(context, '/home');
-    } else if (index == 1) {
-      Navigator.pushNamed(context, '/club_locations');
+    switch (index) {
+      case 0:
+        Navigator.pushNamed(context, '/home');
+        break;
+      case 1:
+        Navigator.pushNamed(context, '/club_locations');
+        break;
+      case 2:
+        Navigator.pushNamed(context, '/profile');
+        break;
     }
+   
   }
 }

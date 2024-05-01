@@ -137,6 +137,7 @@ class _LoginPageState extends State<LoginPage> {
     String password = _passwordController.text;
 
     User? user = await _auth.signInWithEmailAndPassword(email, password);
+    
     await setStaticUserData(user);
     setState(() {
       _isSigning = false;
@@ -155,7 +156,7 @@ class _LoginPageState extends State<LoginPage> {
     if(user == null)  return;
       UserData.email = user.email.toString();
       UserData.userId = user.uid;
+      await UserData.getUserFields();
       await UserData.getUserData();
-
   }
 }

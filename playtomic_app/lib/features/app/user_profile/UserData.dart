@@ -14,9 +14,13 @@ class UserData {
   // FIELDS ID's
   static Field? currentGame;
   static List<Field>? userFieldsList; 
-  
+  static bool updateData = false;
 
   static Future<void> getUserFields() async {
+    if(updateData){
+      updateData = false;
+      return;
+    }
     //GET DATA
     CollectionReference? reservationsCollection = FirebaseFirestore.instance.collection('reservations');
     CollectionReference? fieldsCollection = FirebaseFirestore.instance.collection('fields');
@@ -46,7 +50,6 @@ class UserData {
     CollectionReference? userCollection = FirebaseFirestore.instance.collection('users');
     QuerySnapshot querySnapshot = await userCollection
         .where('email', isEqualTo: email)
-        .limit(1)
         .get();
 
     if (querySnapshot.docs.isNotEmpty) {
@@ -63,10 +66,10 @@ class UserData {
     }
   }
   static Future<void> saveData() async {
-    // print("username: " + name);
-    // print("email: " + email);
-    // print("playing: " + currentGame!.documentId,);
-    // print("username: " + name);
+    print("username: " + name!);
+    print("email: " + email!);
+    print("playing: " + currentGame!.documentId);
+    print("username: " + name!);
     FirebaseFirestore.instance
         .collection('users') // Specify the collection
         .doc(documentId) // Specify the document ID
