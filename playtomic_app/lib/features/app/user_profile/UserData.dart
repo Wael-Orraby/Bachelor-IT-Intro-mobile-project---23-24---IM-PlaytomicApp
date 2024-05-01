@@ -1,4 +1,3 @@
-
 import 'dart:html';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -13,24 +12,30 @@ class UserData {
   static String? country;
   // FIELDS ID's
   static Field? currentGame;
-  static List<Field>? userFieldsList; 
+  static String? currentGameId;
+  static List<Field>? userFieldsList;
   static bool updateData = false;
 
   static Future<void> getUserFields() async {
-    if(updateData){
+    if (updateData) {
       updateData = false;
       return;
     }
     //GET DATA
-    CollectionReference? reservationsCollection = FirebaseFirestore.instance.collection('reservations');
-    CollectionReference? fieldsCollection = FirebaseFirestore.instance.collection('fields');
+    CollectionReference? reservationsCollection =
+        FirebaseFirestore.instance.collection('reservations');
+    CollectionReference? fieldsCollection =
+        FirebaseFirestore.instance.collection('fields');
 
     // Count documents in collections
-      QuerySnapshot reservationsSnapshot = await reservationsCollection
-      .where('userId', isEqualTo: userId)
-      .get();
+    QuerySnapshot reservationsSnapshot =
+        await reservationsCollection.where('userId', isEqualTo: userId).get();
 
-      List<Field> fields = [];
+    List<Field> fields = [];
+    DocumentSnapshot gameSnapshot = await fieldsCollection.doc(currentGameId).get();
+    if(gameSnapshot.exists) {
+      currentGame = Field.fromSnapshot(gameSnapshot);
+    }
 
     // Iterate through reservations
     for (QueryDocumentSnapshot reservation in reservationsSnapshot.docs) {
@@ -42,37 +47,47 @@ class UserData {
         fields.add(Field.fromSnapshot(fieldSnapshot));
       }
     }
+
     print('user data has been catched user: $userId');
     userFieldsList = fields;
   }
 
   static Future<void> getUserData() async {
-    CollectionReference? userCollection = FirebaseFirestore.instance.collection('users');
-    QuerySnapshot querySnapshot = await userCollection
-        .where('email', isEqualTo: email)
-        .get();
+    CollectionReference? userCollection =
+        FirebaseFirestore.instance.collection('users');
+    QuerySnapshot querySnapshot =
+        await userCollection.where('email', isEqualTo: email).get();
 
     if (querySnapshot.docs.isNotEmpty) {
       DocumentSnapshot userDataSnapshot = querySnapshot.docs.first;
-       documentId = userDataSnapshot.id;
-       print(documentId);
+      documentId = userDataSnapshot.id;
+      print(documentId);
       // Access the user data
       name = userDataSnapshot['username'];
       country = userDataSnapshot['country'];
-      
+
       // You can update other UserData fields similarly
     } else {
       print('User not found');
     }
   }
+//MABY NEED TO BE EDITED
   static Future<void> saveData() async {
-    print("username: " + name!);
-    print("email: " + email!);
-    print("playing: " + currentGame!.documentId);
-    print("username: " + name!);
+    if (name == null || email == null || currentGame == null) {
+      print('Error: Some required data is null');
+      return;
+    }
+
+    print("username: $name");
+    print("email: $email");
+    print("playing: ${currentGame!.name}");
+
+    String? docId =
+        documentId ?? FirebaseFirestore.instance.collection('users').doc().id;
+
     FirebaseFirestore.instance
         .collection('users') // Specify the collection
-        .doc(documentId) // Specify the document ID
+        .doc(docId) // Specify the document ID
         .set({
           'username': name,
           'country': country,
@@ -82,13 +97,14 @@ class UserData {
         .then((value) => print('Data saved successfully'))
         .catchError((error) => print('Failed to save data: $error'));
   }
-  static void logOut(){
+
+  static void logOut() {
     clearUser();
     FirebaseAuth.instance.signOut();
     print("loged out");
   }
 
-  static void clearUser(){
+  static void clearUser() {
     userId = null;
     email = null;
     name = null;

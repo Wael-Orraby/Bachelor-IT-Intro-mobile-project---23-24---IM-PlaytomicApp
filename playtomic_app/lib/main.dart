@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart'; // Added
 import 'package:intl/intl.dart';
 import 'package:playtomic_app/features/app/splash_screen/splash_screen.dart';
-import 'package:playtomic_app/features/app/user_profile/user_profile.dart';
+import 'package:playtomic_app/features/user_auth/presentation/pages/user_profile.dart';
 import 'package:playtomic_app/features/user_auth/presentation/pages/club_locations_page.dart';
 import 'package:playtomic_app/features/user_auth/presentation/pages/home_page.dart';
 import 'package:playtomic_app/features/user_auth/presentation/pages/login_page.dart';
