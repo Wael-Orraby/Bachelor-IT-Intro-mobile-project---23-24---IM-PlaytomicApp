@@ -137,7 +137,7 @@ class _LoginPageState extends State<LoginPage> {
     String password = _passwordController.text;
 
     User? user = await _auth.signInWithEmailAndPassword(email, password);
-    setStaticUserData(user);
+    await setStaticUserData(user);
     setState(() {
       _isSigning = false;
     });
@@ -146,15 +146,16 @@ class _LoginPageState extends State<LoginPage> {
     if (user != null) {
       showToast(message: "User is successfully signed in");
       // ignore: use_build_context_synchronously
-      Navigator.pushNamed(context, "/home");
+      Navigator.pushNamed(context, "/profile");
     } else {
       showToast(message: "some error occured");
     }
   }
-  void setStaticUserData(User? user){
+  Future<void> setStaticUserData(User? user) async{
     if(user == null)  return;
       UserData.email = user.email.toString();
       UserData.userId = user.uid;
-      UserData.getUserFields();
+      await UserData.getUserData();
+
   }
 }

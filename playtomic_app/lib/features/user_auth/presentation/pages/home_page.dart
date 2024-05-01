@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
+import 'package:playtomic_app/features/app/user_profile/UserData.dart';
 import 'package:playtomic_app/features/user_auth/presentation/pages/login_page.dart';
 import 'package:playtomic_app/global/common/toast.dart';
 import 'package:table_calendar/table_calendar.dart';
@@ -59,7 +60,7 @@ class _HomePageState extends State {
           IconButton(
             icon: const Icon(Icons.exit_to_app),
             onPressed: () {
-              FirebaseAuth.instance.signOut();
+              UserData.logOut();
               Navigator.pushNamed(context, "/login");
             },
           ),

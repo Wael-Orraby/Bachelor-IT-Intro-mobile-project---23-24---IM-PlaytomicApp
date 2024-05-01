@@ -1,30 +1,40 @@
 import 'package:flutter/material.dart';
+import 'package:playtomic_app/features/app/user_profile/UserData.dart';
 import 'package:playtomic_app/features/app/user_profile/profile_wigets/profile_about.dart';
 import 'package:playtomic_app/features/app/user_profile/profile_wigets/profile_title.dart';
-
 
 class UserProfilePage extends StatefulWidget {
   const UserProfilePage({super.key});
 
   @override
-  State<UserProfilePage> createState() => _UserProfilePage();
+  State<UserProfilePage> createState() => _UserProfilePageState();
 }
 
-class _UserProfilePage extends State<UserProfilePage> {
+class _UserProfilePageState extends State<UserProfilePage> {
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(kToolbarHeight),
+        child: AppBar(
           automaticallyImplyLeading: false,
           title: const Text("User Account"),
         ),
-       body: const Column(
-  children: [
-    ProfileTitle(),
-    ProfileAbout(),
-  ],
-),
-
+      ),
+      body: Column(
+        children: [
+          ProfileTitle(),
+          ProfileAbout(),
+        ],
+      ),
     );
   }
 }
