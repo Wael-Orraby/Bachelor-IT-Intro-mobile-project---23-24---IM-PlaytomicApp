@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:playtomic_app/features/app/user_profile/UserData.dart';
 import 'package:playtomic_app/features/user_auth/presentation/pages/sign_up_page.dart';
 import 'package:playtomic_app/features/user_auth/presentation/widgets/form_container_widget.dart';
 import 'package:playtomic_app/global/common/toast.dart';
@@ -136,10 +137,11 @@ class _LoginPageState extends State<LoginPage> {
     String password = _passwordController.text;
 
     User? user = await _auth.signInWithEmailAndPassword(email, password);
-
+    setStaticUserData(user);
     setState(() {
       _isSigning = false;
     });
+
 
     if (user != null) {
       showToast(message: "User is successfully signed in");
@@ -148,5 +150,11 @@ class _LoginPageState extends State<LoginPage> {
     } else {
       showToast(message: "some error occured");
     }
+  }
+  void setStaticUserData(User? user){
+    if(user == null)  return;
+      UserData.email = user.email.toString();
+      UserData.userId = user.uid;
+      UserData.getUserFields();
   }
 }

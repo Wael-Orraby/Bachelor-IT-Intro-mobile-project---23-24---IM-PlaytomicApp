@@ -4,7 +4,8 @@ import 'package:playtomic_app/components/button/cbuttonstyle.dart';
 enum ButtonType {
   PRIMARY,
   SECONDARY,
-  DARK
+  DARK,
+  RED
 }
 
 class CButton extends StatelessWidget{

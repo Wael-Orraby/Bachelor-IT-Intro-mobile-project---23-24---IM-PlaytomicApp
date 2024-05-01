@@ -11,7 +11,7 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key});
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +30,7 @@ class MyApp extends StatelessWidget {
 }
 
 class HomePage extends StatefulWidget {
-  const HomePage({Key? key}) : super(key: key);
+  const HomePage({super.key});
 
   @override
   _HomePageState createState() => _HomePageState();
@@ -270,18 +270,14 @@ class FieldListItem extends StatelessWidget {
           return formattedDateTime == startTime;
         }, orElse: () => "");
 
-        if (matchingTime != null) {
-          await FirebaseFirestore.instance
-              .collection('fields')
-              .doc(field.documentId)
-              .update({
-            'available_times': FieldValue.arrayRemove([matchingTime]),
-          });
-          showToast(message: 'Reserved ${field.name} at $time');
-        } else {
-          print('Time $formattedTime not found in availableTimes array');
-        }
-      }
+        await FirebaseFirestore.instance
+            .collection('fields')
+            .doc(field.documentId)
+            .update({
+          'available_times': FieldValue.arrayRemove([matchingTime]),
+        });
+        showToast(message: 'Reserved ${field.name} at $time');
+            }
     } catch (e) {
       print('Error adding reservation: $e');
       showToast(message: 'Failed to make reservation');

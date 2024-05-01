@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:playtomic_app/components/image/cimage.dart';
 import 'package:playtomic_app/features/app/user_profile/profile_wigets/profile_about.dart';
 import 'package:playtomic_app/features/app/user_profile/profile_wigets/profile_title.dart';
 

@@ -19,6 +19,10 @@ class CButtonStyle{
         buttonColor = Colors.black;
         textColor = Colors.white;
         break;
+      case ButtonType.RED:
+        buttonColor = Colors.red;
+        textColor = Colors.white;
+      break;
     }
   }
 
