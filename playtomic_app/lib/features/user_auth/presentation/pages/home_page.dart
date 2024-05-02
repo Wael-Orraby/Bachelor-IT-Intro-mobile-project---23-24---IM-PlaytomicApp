@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
+import 'package:playtomic_app/features/app/user_profile/MainUser.dart';
 import 'package:playtomic_app/features/app/user_profile/UserData.dart';
 import 'package:playtomic_app/features/user_auth/presentation/pages/club_locations_page.dart';
 import 'package:playtomic_app/features/user_auth/presentation/pages/login_page.dart';
@@ -122,7 +123,7 @@ class _HomePageState extends State<HomePage> {
           IconButton(
             icon: const Icon(Icons.exit_to_app),
             onPressed: () {
-              UserData.logOut();
+              MainUser.logOut();
               Navigator.pushNamed(context, "/login");
             },
           ),
