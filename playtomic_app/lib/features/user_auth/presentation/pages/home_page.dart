@@ -28,12 +28,12 @@ class MyApp extends StatelessWidget {
       routes: {
         '/': (context) => const HomePage(),
         '/login': (context) => const LoginPage(),
-        '/club_locations': (context) => ClubLocationsPage(),
+        '/club_locations': (context) => const ClubLocationsPage(),
       },
       // Plaats BottomNavigationBar buiten Scaffold
-      home: Scaffold(
-        body: const HomePage(),
-        bottomNavigationBar: const MyBottomNavigationBar(),
+      home: const Scaffold(
+        body: HomePage(),
+        bottomNavigationBar: MyBottomNavigationBar(),
       ),
     );
   }
@@ -41,7 +41,7 @@ class MyApp extends StatelessWidget {
 
 // BottomNavigationBar aparte widget maken
 class MyBottomNavigationBar extends StatelessWidget {
-  const MyBottomNavigationBar({Key? key}) : super(key: key);
+  const MyBottomNavigationBar({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -182,7 +182,7 @@ class _HomePageState extends State<HomePage> {
           ),
         ],
       ),
-      bottomNavigationBar: MyBottomNavigationBar(),
+      bottomNavigationBar: const MyBottomNavigationBar(),
     );
   }
 }
@@ -192,10 +192,10 @@ class FieldListItem extends StatelessWidget {
   final ValueNotifier<DateTime> selectedDay;
 
   const FieldListItem({
-    Key? key,
+    super.key,
     required this.field,
     required this.selectedDay,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

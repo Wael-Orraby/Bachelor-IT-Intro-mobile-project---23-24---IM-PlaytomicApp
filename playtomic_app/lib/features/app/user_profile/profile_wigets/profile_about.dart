@@ -11,7 +11,7 @@ class ProfileAbout extends StatefulWidget {
 }
 
 class _ProfileAboutState extends State<ProfileAbout> {
-  late ValueNotifier<DateTime> _selectedDay = ValueNotifier(DateTime.now());
+  late final ValueNotifier<DateTime> _selectedDay = ValueNotifier(DateTime.now());
   bool loading = true;
 
   @override

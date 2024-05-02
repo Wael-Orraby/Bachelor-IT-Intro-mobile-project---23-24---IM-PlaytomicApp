@@ -29,7 +29,7 @@ class _ClubLocationsPageState extends State<ClubLocationsPage> {
         ),
         markers: _markers,
       ),
-      bottomNavigationBar: MyBottomNavigationBar(),
+      bottomNavigationBar: const MyBottomNavigationBar(),
     );
   }
 

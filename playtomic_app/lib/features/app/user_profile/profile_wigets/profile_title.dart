@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:playtomic_app/components/button/cbutton.dart';
 import 'package:playtomic_app/components/image/cimage.dart';
 import 'package:playtomic_app/components/text_field/ctext_field.dart';
-import 'package:playtomic_app/features/app/user_profile/UserData.dart';
+import 'package:playtomic_app/features/app/user_profile/MainUser.dart';
 
 class ProfileTitle extends StatefulWidget {
   const ProfileTitle({super.key});
@@ -23,13 +23,13 @@ class _ProfileTitleState extends State<ProfileTitle> {
   
 
     Future<void> _initializeTotaalPlayed() async {
-    if(UserData.fetchUser == false) {
+    if(MainUser.fetchUser == false) {
       loading = false;
       return;
     }
-    await UserData.getUserFields();
-    await UserData.getUserData().then((_) async {
-      print(UserData.userFieldsList!.length);
+    await MainUser.getUserFields();
+    await MainUser.getMainUser().then((_) async {
+      print(MainUser.userFieldsList!.length);
       loading = false;
       print(loading);
       if (mounted) {
@@ -77,11 +77,11 @@ class _ProfileTitleState extends State<ProfileTitle> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        UserData.name ?? 'Unknown',
+                        MainUser.name ?? 'Unknown',
                         style: const TextStyle(fontSize: 30),
                       ),
                       Text(
-                        "${UserData.currentGame?.name ?? 'Unknown'}, ${UserData.country ?? 'Unknown'}",
+                        "${MainUser.currentGame?.name ?? 'Unknown'}, ${MainUser.country ?? 'Unknown'}",
                         style: const TextStyle(fontSize: 18),
                       ),
                     ],
@@ -95,7 +95,7 @@ class _ProfileTitleState extends State<ProfileTitle> {
                   Row(
                     children: [
                       Text(
-                        "Totaal Games: ${UserData.countTotaalPlayed()}",
+                        "Totaal Games: ${MainUser.countTotaalPlayed()}",
                         style: const TextStyle(fontSize: 30),
                       ),
                       const Divider(color: Colors.black),
@@ -129,7 +129,7 @@ class _ProfileTitleState extends State<ProfileTitle> {
                   style: ButtonType.SECONDARY,
                   text: "Log Out",
                   onPressed: () {
-                    UserData.logOut();
+                    MainUser.logOut();
                     Navigator.pushNamed(context, "/login");
                   },
                 ),
@@ -149,7 +149,7 @@ class _ProfileTitleState extends State<ProfileTitle> {
           title: const Text("Edit Profile"),
           content: CTextField(
               style: TextFieldStyle.SECONDARY,
-              labelText: UserData.name ?? 'Unknown',
+              labelText: MainUser.name ?? 'Unknown',
               controller: _textEditingController),
           actions: [
             CButton(
@@ -167,7 +167,7 @@ class _ProfileTitleState extends State<ProfileTitle> {
                 editProfile();
                 Navigator.pop(context);
                 _textEditingController.clear();
-                UserData.saveData();
+                MainUser.saveData();
               },
             ),
           ],
@@ -178,7 +178,7 @@ class _ProfileTitleState extends State<ProfileTitle> {
 
   void editProfile() {
     setState(() {
-      UserData.name = _textEditingController.text;
+      MainUser.name = _textEditingController.text;
     });
     // Implement EditProfile functionality here
   }

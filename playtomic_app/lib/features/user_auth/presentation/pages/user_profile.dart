@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:playtomic_app/features/app/user_profile/UserData.dart';
 import 'package:playtomic_app/features/app/user_profile/profile_wigets/profile_about.dart';
 import 'package:playtomic_app/features/app/user_profile/profile_wigets/profile_title.dart';
 import 'package:playtomic_app/features/user_auth/presentation/pages/home_page.dart';

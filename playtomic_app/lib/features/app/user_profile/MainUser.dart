@@ -1,4 +1,3 @@
-import 'dart:html';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -59,12 +58,12 @@ class MainUser {
         await userCollection.where('email', isEqualTo: email).get();
 
     if (querySnapshot.docs.isNotEmpty) {
-      DocumentSnapshot MainUserSnapshot = querySnapshot.docs.first;
-      documentId = MainUserSnapshot.id;
+      DocumentSnapshot mainUserSnapshot = querySnapshot.docs.first;
+      documentId = mainUserSnapshot.id;
       print(documentId);
       // Access the user data
-      name = MainUserSnapshot['username'];
-      country = MainUserSnapshot['country'];
+      name = mainUserSnapshot['username'];
+      country = mainUserSnapshot['country'];
 
       // You can update other MainUser fields similarly
     } else {
