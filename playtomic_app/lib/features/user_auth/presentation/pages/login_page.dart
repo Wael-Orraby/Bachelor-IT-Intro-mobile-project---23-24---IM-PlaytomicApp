@@ -1,6 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:playtomic_app/features/app/user_profile/UserData.dart';
+import 'package:playtomic_app/features/app/user_profile/MainUser.dart';
 import 'package:playtomic_app/features/user_auth/presentation/pages/sign_up_page.dart';
 import 'package:playtomic_app/features/user_auth/presentation/widgets/form_container_widget.dart';
 import 'package:playtomic_app/global/common/toast.dart';
@@ -138,7 +138,7 @@ class _LoginPageState extends State<LoginPage> {
 
     User? user = await _auth.signInWithEmailAndPassword(email, password);
     
-    await setStaticUserData(user);
+    await setStaticMainUser(user);
     setState(() {
       _isSigning = false;
     });
@@ -152,11 +152,11 @@ class _LoginPageState extends State<LoginPage> {
       showToast(message: "some error occured");
     }
   }
-  Future<void> setStaticUserData(User? user) async{
+  Future<void> setStaticMainUser(User? user) async{
     if(user == null)  return;
-      UserData.email = user.email.toString();
-      UserData.userId = user.uid;
-      await UserData.getUserFields();
-      await UserData.getUserData();
+      MainUser.email = user.email.toString();
+      MainUser.userId = user.uid;
+      await MainUser.getUserFields();
+      await MainUser.getMainUser();
   }
 }
