@@ -23,6 +23,10 @@ class _ProfileTitleState extends State<ProfileTitle> {
   
 
     Future<void> _initializeTotaalPlayed() async {
+    if(UserData.fetchUser == false) {
+      loading = false;
+      return;
+    }
     await UserData.getUserFields();
     await UserData.getUserData().then((_) async {
       print(UserData.userFieldsList!.length);

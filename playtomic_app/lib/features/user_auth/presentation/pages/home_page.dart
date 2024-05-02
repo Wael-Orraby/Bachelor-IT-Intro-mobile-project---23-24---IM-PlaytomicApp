@@ -75,6 +75,9 @@ class MyBottomNavigationBar extends StatelessWidget {
     } else if (ModalRoute.of(context)?.settings.name == '/club_locations') {
       return 1;
     }
+    else if (ModalRoute.of(context)?.settings.name == '/profile') {
+      return 2;
+    }
     return 0;
   }
 
@@ -83,6 +86,9 @@ class MyBottomNavigationBar extends StatelessWidget {
       Navigator.pushNamed(context, '/home');
     } else if (index == 1) {
       Navigator.pushNamed(context, '/club_locations');
+    }
+    else if (index == 2) {
+      Navigator.pushNamed(context, '/profile');
     }
   }
 }

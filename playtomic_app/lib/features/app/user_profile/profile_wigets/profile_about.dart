@@ -21,6 +21,10 @@ class _ProfileAboutState extends State<ProfileAbout> {
   }
 
   Future<void> _initializeTotaalPlayed() async {
+    if(UserData.fetchFields == false) {
+        loading = false;
+        return;
+    }
     await UserData.getUserFields().then((_) {
       print("Fields loaded");
       setState(() {

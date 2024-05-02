@@ -14,13 +14,11 @@ class UserData {
   static Field? currentGame;
   static String? currentGameId;
   static List<Field>? userFieldsList;
-  static bool updateData = false;
-
+  static bool fetchUser = true;
+  static bool fetchFields = true;
   static Future<void> getUserFields() async {
-    if (updateData) {
-      updateData = false;
-      return;
-    }
+    if (!fetchFields) return;
+    fetchFields = false;
     //GET DATA
     CollectionReference? reservationsCollection =
         FirebaseFirestore.instance.collection('reservations');
@@ -53,6 +51,8 @@ class UserData {
   }
 
   static Future<void> getUserData() async {
+    if (!fetchUser) return;
+    fetchUser = false;
     CollectionReference? userCollection =
         FirebaseFirestore.instance.collection('users');
     QuerySnapshot querySnapshot =
