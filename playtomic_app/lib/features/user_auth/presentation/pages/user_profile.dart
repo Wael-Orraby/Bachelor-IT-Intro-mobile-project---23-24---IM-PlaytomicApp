@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:playtomic_app/features/app/user_profile/profile_wigets/profile_about.dart';
 import 'package:playtomic_app/features/app/user_profile/profile_wigets/profile_title.dart';
-import 'package:playtomic_app/features/user_auth/presentation/pages/home_page.dart';
+import 'package:playtomic_app/features/user_auth/presentation/pages/navbar_page.dart';
 
 class UserProfilePage extends StatefulWidget {
   const UserProfilePage({super.key});
@@ -11,7 +11,6 @@ class UserProfilePage extends StatefulWidget {
 }
 
 class _UserProfilePageState extends State<UserProfilePage> {
-
   @override
   void initState() {
     super.initState();
@@ -33,7 +32,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
           ProfileAbout(),
         ],
       ),
-       bottomNavigationBar:const MyBottomNavigationBar(),
+      bottomNavigationBar: const MyBottomNavigationBar(),
     );
   }
 }

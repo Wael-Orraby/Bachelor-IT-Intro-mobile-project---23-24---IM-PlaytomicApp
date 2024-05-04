@@ -16,6 +16,10 @@ class MyBottomNavigationBar extends StatelessWidget {
           label: 'Clublocaties',
         ),
         BottomNavigationBarItem(
+          icon: Icon(Icons.sports_soccer),
+          label: 'Wedstrijden',
+        ),
+        BottomNavigationBarItem(
           icon: Icon(Icons.account_circle),
           label: 'Profile',
         ),
@@ -29,15 +33,16 @@ class MyBottomNavigationBar extends StatelessWidget {
     );
   }
 
-int _currentIndex(BuildContext context) {
-
+  int _currentIndex(BuildContext context) {
     switch (ModalRoute.of(context)?.settings.name) {
       case '/home':
         return 0;
       case '/club_locations':
         return 1;
-      case '/profile':
+      case '/wedstrijden':
         return 2;
+      case '/profile':
+        return 3;
     }
     return 0;
   }
@@ -51,9 +56,11 @@ int _currentIndex(BuildContext context) {
         Navigator.pushNamed(context, '/club_locations');
         break;
       case 2:
+        Navigator.pushNamed(context, '/wedstrijden');
+        break;
+      case 3:
         Navigator.pushNamed(context, '/profile');
         break;
     }
-   
   }
 }
