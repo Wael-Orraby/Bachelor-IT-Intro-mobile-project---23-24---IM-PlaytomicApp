@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
-import 'package:playtomic_app/features/user_auth/presentation/pages/home_page.dart';
+import 'package:playtomic_app/features/user_auth/presentation/pages/navbar_page.dart';
 
 class ClubLocationsPage extends StatefulWidget {
   const ClubLocationsPage({super.key});

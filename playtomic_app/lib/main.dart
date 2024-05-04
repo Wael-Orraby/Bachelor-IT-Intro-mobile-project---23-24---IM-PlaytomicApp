@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart'; // Added
 import 'package:intl/intl.dart';
 import 'package:playtomic_app/features/app/splash_screen/splash_screen.dart';
+import 'package:playtomic_app/features/user_auth/presentation/pages/matches_page.dart';
 import 'package:playtomic_app/features/user_auth/presentation/pages/user_profile.dart';
 import 'package:playtomic_app/features/user_auth/presentation/pages/club_locations_page.dart';
 import 'package:playtomic_app/features/user_auth/presentation/pages/home_page.dart';
@@ -16,6 +17,7 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
   await writeDataToFirestore(); // Write data to Firestore
+
   runApp(const MainApp());
 }
 
@@ -92,6 +94,7 @@ class MainApp extends StatelessWidget {
         '/signUp': (context) => const SignUpPage(),
         '/home': (context) => const HomePage(),
         '/club_locations': (context) => const ClubLocationsPage(),
+        '/wedstrijden': (context) => const WedstrijdenPage(),
         '/profile': (context) => const UserProfilePage(),
       },
     );

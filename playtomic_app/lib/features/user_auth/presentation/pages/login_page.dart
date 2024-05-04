@@ -137,26 +137,26 @@ class _LoginPageState extends State<LoginPage> {
     String password = _passwordController.text;
 
     User? user = await _auth.signInWithEmailAndPassword(email, password);
-    
+
     await setStaticMainUser(user);
     setState(() {
       _isSigning = false;
     });
 
-
     if (user != null) {
       showToast(message: "User is successfully signed in");
       // ignore: use_build_context_synchronously
-      Navigator.pushNamed(context, "/profile");
+      Navigator.pushNamed(context, "/home");
     } else {
       showToast(message: "some error occured");
     }
   }
-  Future<void> setStaticMainUser(User? user) async{
-    if(user == null)  return;
-      MainUser.email = user.email.toString();
-      MainUser.userId = user.uid;
-      await MainUser.getUserFields();
-      await MainUser.getMainUser();
+
+  Future<void> setStaticMainUser(User? user) async {
+    if (user == null) return;
+    MainUser.email = user.email.toString();
+    MainUser.userId = user.uid;
+    await MainUser.getUserFields();
+    await MainUser.getMainUser();
   }
 }
