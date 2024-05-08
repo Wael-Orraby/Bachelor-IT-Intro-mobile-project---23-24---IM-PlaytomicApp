@@ -232,7 +232,7 @@ class _WedstrijdenState extends State<WedstrijdenPage> {
   }
 
   Future<List<ReservedField>> getReservedFields() async {
-    String? currentUserId = MainUser.userId;
+    String? currentUserId = MainUser.user.userId;
 
     QuerySnapshot reservationSnapshot = await FirebaseFirestore.instance
         .collection('reservations')

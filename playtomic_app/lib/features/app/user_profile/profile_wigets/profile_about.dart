@@ -12,26 +12,13 @@ class ProfileAbout extends StatefulWidget {
 
 class _ProfileAboutState extends State<ProfileAbout> {
   late ValueNotifier<DateTime> _selectedDay = ValueNotifier(DateTime.now());
-  bool loading = true;
+  bool loading = false;
 
   @override
   void initState() {
     super.initState();
-    _initializeTotaalPlayed();
   }
 
-  Future<void> _initializeTotaalPlayed() async {
-    if(MainUser.fetchFields == false) {
-        loading = false;
-        return;
-    }
-    await MainUser.getUserFields().then((_) {
-      print("Fields loaded");
-      setState(() {
-        loading = false;
-      });
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -63,21 +50,6 @@ class _ProfileAboutState extends State<ProfileAbout> {
                     FieldListItem(
                       field: field,
                       selectedDay: _selectedDay,
-                    ),
-                    Positioned(
-                      top: 20,
-                      left: 15,
-                      child: CButton(
-                        style: ButtonType.DARK,
-                        onPressed: () async {
-                          // Set current game to the selected field
-                          MainUser.currentGame = field;
-                          await MainUser.saveData();
-                          print(field.name);
-                          Navigator.pushNamed(context, "/profile");
-                        },
-                        text: "Play",
-                      ),
                     ),
                   ],
                 );

@@ -8,38 +8,78 @@ class UserData{
   String? email; // "wael1@gmail.com";
   String? userName;
   String? country;
-  Field? playing;
-  int? win;
-  int? los;
-  String? teamName;
+  int wins = 0;
+  int losses = 0;
 
-  UserData({this.documentId, this.userId, this.email, this.userName, this.country, this.win, this.los, this.teamName});
+  UserData({this.documentId, this.userId, this.email, this.userName, this.country});
+
+
+  Future<List<Field>>? getUserFields() async {
+    //GET DATA
+        print("getinging user fields: " + email!);
+    CollectionReference? reservationsCollection =
+        FirebaseFirestore.instance.collection('reservations');
+    CollectionReference? fieldsCollection =
+        FirebaseFirestore.instance.collection('fields');
+
+    // Count documents in collections
+    QuerySnapshot userReservationsSnapshot =
+        await reservationsCollection.where('userId', isEqualTo: userId).get();
+
+    List<Field> fields = [];
+
+    // Iterate through userReservations
+    for (QueryDocumentSnapshot reservation in userReservationsSnapshot.docs) {
+      String fieldId = reservation['fieldId'];
+      // Get the corresponding field
+      DocumentSnapshot fieldSnapshot =
+          await fieldsCollection.doc(fieldId).get();
+      if (fieldSnapshot.exists) {
+        fields.add(Field.fromSnapshot(fieldSnapshot));
+      }
+    }
+        print(fields);
+    return fields;
+  }
+   Future<void> getUser() async {
+    CollectionReference? userCollection =
+        FirebaseFirestore.instance.collection('users');
+    QuerySnapshot querySnapshot =
+        await userCollection.where('email', isEqualTo: email).get();
+
+    if (querySnapshot.docs.isNotEmpty) {
+      DocumentSnapshot mainUserSnapshot = querySnapshot.docs.first;
+      documentId = mainUserSnapshot.id;
+      print(email);
+      // Access the user data
+      userName = mainUserSnapshot['userName'];
+      country = mainUserSnapshot['country'];
+
+      // You can update other MainUser fields similarly
+    } else {
+      print('User not found');
+    }
+  }
 
   void updateDb(){
-
-    if (userName == null || email == null || playing == null) {
+    if (userName == null || email == null) {
       print('Error: Some required data is null');
       return;
     }
 
+    print("doc: ${documentId}");
+    print("id: ${userId}");
     print("username: $userName");
     print("email: $email");
-    print("playing: ${playing!.name}");
-
-    String? docId =
-        documentId ?? FirebaseFirestore.instance.collection('users').doc().id;
-
     FirebaseFirestore.instance
         .collection('users') // Specify the collection
-        .doc(docId) // Specify the document ID
+        .doc(documentId) // Specify the document ID
         .set({
           'country':country,
           'email': email,
-          'loss': los,
-          'playing': playing!.documentId,
-          'teamName': teamName,
+          'losses': losses,
           'userName': userName,
-          'win': win,
+          'wins': wins,
         })
         .then((value) => print('user successfully saved'))
         .catchError((error) => print('Failed to save user: $error'));
@@ -50,11 +90,9 @@ class UserData{
     userId = null;
     country = null;
     email = null;
-    los = null;
-    playing = null;
-    teamName = null;
+    losses = 0;
     userName = null;
-    win = null;
+    wins = 0;
   }
 
 }

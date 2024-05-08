@@ -1,4 +1,7 @@
+import 'dart:html';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:playtomic_app/components/button/cbutton.dart';
 import 'package:playtomic_app/components/image/cimage.dart';
 import 'package:playtomic_app/components/text_field/ctext_field.dart';
@@ -14,28 +17,26 @@ class ProfileTitle extends StatefulWidget {
 
 class _ProfileTitleState extends State<ProfileTitle> {
   final TextEditingController _textEditingController = TextEditingController();
-  bool loading = true;
+  bool loading = false;
   @override
   void initState() {
     super.initState();
     _initializeTotaalPlayed();
   }
-  
 
-    Future<void> _initializeTotaalPlayed() async {
-    if(MainUser.fetchUser == false) {
-      loading = false;
-      return;
+  Future<void> _initializeTotaalPlayed() async {
+    print(MainUser.user.userName);
+    if (MainUser.user.userName == null) {
+      loading = true;
     }
-    await MainUser.getUserFields();
     await MainUser.getMainUser().then((_) async {
       print(MainUser.userFieldsList!.length);
-      loading = false;
       print(loading);
       if (mounted) {
         setState(() {});
       }
     });
+    loading = false;
   }
 
   @override
@@ -77,14 +78,17 @@ class _ProfileTitleState extends State<ProfileTitle> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        MainUser.name ?? 'Unknown',
+                        MainUser.user.userName ?? 'Unknown',
                         style: const TextStyle(fontSize: 30),
                       ),
                       Text(
-                        "${MainUser.currentGame?.name ?? 'Unknown'}, ${MainUser.country ?? 'Unknown'}",
+                        "${MainUser.currentGame?.name ?? 'curantly not playing'}, ${MainUser.user.country ?? 'Unknown'}",
                         style: const TextStyle(fontSize: 18),
                       ),
                     ],
+                  ),
+                  const SizedBox(
+                    width: 30,
                   ),
                 ],
               ),
@@ -92,11 +96,17 @@ class _ProfileTitleState extends State<ProfileTitle> {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  Text(
+                    "Totaal Games: ${MainUser.countTotaalPlayed()}",
+                    style: const TextStyle(fontSize: 30),
+                  ),
                   Row(
                     children: [
                       Text(
-                        "Totaal Games: ${MainUser.countTotaalPlayed()}",
-                        style: const TextStyle(fontSize: 30),
+                        "Wins: ${MainUser.user.wins} Losses: ${MainUser.user.losses}",
+                        style: const TextStyle(fontSize: 20),
+                        textAlign: TextAlign.center,
+                        overflow: TextOverflow.ellipsis,
                       ),
                       const Divider(color: Colors.black),
                     ],
@@ -149,7 +159,7 @@ class _ProfileTitleState extends State<ProfileTitle> {
           title: const Text("Edit Profile"),
           content: CTextField(
               style: TextFieldStyle.SECONDARY,
-              labelText: MainUser.name ?? 'Unknown',
+              labelText: MainUser.user.userName ?? 'Unknown',
               controller: _textEditingController),
           actions: [
             CButton(
@@ -167,7 +177,7 @@ class _ProfileTitleState extends State<ProfileTitle> {
                 editProfile();
                 Navigator.pop(context);
                 _textEditingController.clear();
-                MainUser.saveData();
+                MainUser.user.updateDb();
               },
             ),
           ],
@@ -178,7 +188,7 @@ class _ProfileTitleState extends State<ProfileTitle> {
 
   void editProfile() {
     setState(() {
-      MainUser.name = _textEditingController.text;
+      MainUser.user.userName = _textEditingController.text;
     });
     // Implement EditProfile functionality here
   }

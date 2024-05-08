@@ -154,8 +154,9 @@ class _LoginPageState extends State<LoginPage> {
 
   Future<void> setStaticMainUser(User? user) async {
     if (user == null) return;
-    MainUser.email = user.email.toString();
-    MainUser.userId = user.uid;
+    MainUser.clearUser();
+    MainUser.user.email = user.email.toString();
+    MainUser.user.userId = user.uid;
     await MainUser.getUserFields();
     await MainUser.getMainUser();
   }

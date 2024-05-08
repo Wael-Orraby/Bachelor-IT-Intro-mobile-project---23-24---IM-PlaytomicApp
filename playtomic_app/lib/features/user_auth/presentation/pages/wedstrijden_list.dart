@@ -2,7 +2,6 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:playtomic_app/features/app/user_profile/MainUser.dart';
 import 'package:playtomic_app/features/user_auth/presentation/pages/match_details_page.dart';
 
 class OpenWedstrijdenPage extends StatelessWidget {
@@ -127,8 +126,6 @@ class OpenWedstrijdenPage extends StatelessWidget {
 
   void _joinMatch(String matchId, List<String> team1, List<String> team2,
       BuildContext context) async {
-    String? currentUserId = MainUser.userId;
-
     String? playerName;
     // Toon dialoogvenster om speler naam in te voeren
     playerName = await showDialog(
