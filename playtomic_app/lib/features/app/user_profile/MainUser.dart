@@ -1,5 +1,4 @@
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:playtomic_app/features/app/user_profile/UserData.dart';
 import 'package:playtomic_app/features/user_auth/presentation/pages/home_page.dart';
@@ -7,13 +6,12 @@ import 'package:playtomic_app/features/user_auth/presentation/pages/home_page.da
 class MainUser {
   static UserData user = UserData();
 
-    // FIELDS ID's
+  // FIELDS ID's
   static Field? currentGame;
   static String? currentGameId;
-  static List<Field>? userFieldsList;
   static bool loadingUser = false;
   static Future<void> getUserFields() async {
-    userFieldsList = await user.getUserFields();
+    await user.getUserFields();
   }
 
   static Future<void> getMainUser() async {
@@ -36,7 +34,7 @@ class MainUser {
   }
 
   static int countTotaalPlayed() {
-    if (userFieldsList == null) return 0;
-    return userFieldsList!.length;
+    if (user.userFieldsList == null) return 0;
+    return user.userFieldsList!.length;
   }
 }

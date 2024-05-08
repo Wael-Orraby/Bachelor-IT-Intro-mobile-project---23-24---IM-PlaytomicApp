@@ -30,7 +30,7 @@ class _ProfileTitleState extends State<ProfileTitle> {
       loading = true;
     }
     await MainUser.getMainUser().then((_) async {
-      print(MainUser.userFieldsList!.length);
+      print(MainUser.user.userFieldsList!.length);
       print(loading);
       if (mounted) {
         setState(() {});

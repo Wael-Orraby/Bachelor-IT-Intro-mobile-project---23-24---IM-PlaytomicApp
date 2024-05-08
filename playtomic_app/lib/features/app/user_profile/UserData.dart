@@ -10,13 +10,15 @@ class UserData{
   String? country;
   int wins = 0;
   int losses = 0;
+  List<Field>? userFieldsList;
+  List<String>? userFieldTimerList;
 
   UserData({this.documentId, this.userId, this.email, this.userName, this.country});
 
 
-  Future<List<Field>>? getUserFields() async {
+  Future<void> getUserFields() async {
     //GET DATA
-        print("getinging user fields: " + email!);
+    print("getinging user fields: " + email!);
     CollectionReference? reservationsCollection =
         FirebaseFirestore.instance.collection('reservations');
     CollectionReference? fieldsCollection =
@@ -27,6 +29,7 @@ class UserData{
         await reservationsCollection.where('userId', isEqualTo: userId).get();
 
     List<Field> fields = [];
+    List<String> timers = [];
 
     // Iterate through userReservations
     for (QueryDocumentSnapshot reservation in userReservationsSnapshot.docs) {
@@ -35,11 +38,15 @@ class UserData{
       DocumentSnapshot fieldSnapshot =
           await fieldsCollection.doc(fieldId).get();
       if (fieldSnapshot.exists) {
+         timers.add(reservation['time'].toString());
         fields.add(Field.fromSnapshot(fieldSnapshot));
       }
     }
-        print(fields);
-    return fields;
+
+    userFieldsList = fields;
+    userFieldTimerList = timers;
+    
+    print(fields);
   }
    Future<void> getUser() async {
     CollectionReference? userCollection =

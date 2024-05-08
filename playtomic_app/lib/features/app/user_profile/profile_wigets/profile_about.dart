@@ -7,7 +7,7 @@ class ProfileAbout extends StatefulWidget {
   const ProfileAbout({super.key});
 
   @override
-   State<ProfileAbout> createState() => _ProfileAboutState();
+  State<ProfileAbout> createState() => _ProfileAboutState();
 }
 
 class _ProfileAboutState extends State<ProfileAbout> {
@@ -19,37 +19,69 @@ class _ProfileAboutState extends State<ProfileAbout> {
     super.initState();
   }
 
-
   @override
   Widget build(BuildContext context) {
     return loading
-
-    ?  Container(
-        margin: EdgeInsets.only(top: 
-        MediaQuery.of(context).size.height/2 - kToolbarHeight *3),
-        child: const Center(
-                child: Column(
-                  children: [
-                    CircularProgressIndicator(),
-                    SizedBox(height: 10),
-                    Text(
-                      "Loading...",
-                      style: TextStyle(fontSize: 18),
-                    ),
-                  ],
-                ),
+        ? Container(
+            margin: EdgeInsets.only(
+                top: MediaQuery.of(context).size.height / 2 -
+                    kToolbarHeight * 3),
+            child: const Center(
+              child: Column(
+                children: [
+                  CircularProgressIndicator(),
+                  SizedBox(height: 10),
+                  Text(
+                    "Loading...",
+                    style: TextStyle(fontSize: 18),
+                  ),
+                ],
               ),
-      )
+            ),
+          )
         : Expanded(
             child: ListView.builder(
-              itemCount: MainUser.userFieldsList?.length ?? 0,
+              itemCount: MainUser.user.userFieldsList?.length ?? 0,
               itemBuilder: (BuildContext context, int index) {
-                Field field = MainUser.userFieldsList![index];
+                Field field = MainUser.user.userFieldsList![index];
                 return Stack(
                   children: [
-                    FieldListItem(
-                      field: field,
-                      selectedDay: _selectedDay,
+                    Card(
+                      margin: const EdgeInsets.all(10),
+                      child: Column(
+                        children: [
+                          Image.network(
+                            field.imageUrl,
+                            height: 200,
+                            width: double.infinity,
+                            fit: BoxFit.cover,
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  field.name,
+                                  style: const TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                const SizedBox(height: 5),
+                                Text(
+                                  'Location: ${field.location}',
+                                  style: const TextStyle(fontSize: 16),
+                                ),
+                                const SizedBox(height: 5),
+                                Text(
+                                  "Start at: ${MainUser.user.userFieldTimerList![index]}",
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ],
                 );
