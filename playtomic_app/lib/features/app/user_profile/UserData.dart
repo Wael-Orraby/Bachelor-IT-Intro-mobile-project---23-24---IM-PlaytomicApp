@@ -12,6 +12,7 @@ class UserData{
   int losses = 0;
   List<Field>? userFieldsList;
   List<String>? userFieldTimerList;
+  List<String>? userReservationIdList;
 
   UserData({this.documentId, this.userId, this.email, this.userName, this.country});
 
@@ -30,6 +31,7 @@ class UserData{
 
     List<Field> fields = [];
     List<String> timers = [];
+    List<String> reservationIds = [];
 
     // Iterate through userReservations
     for (QueryDocumentSnapshot reservation in userReservationsSnapshot.docs) {
@@ -38,13 +40,15 @@ class UserData{
       DocumentSnapshot fieldSnapshot =
           await fieldsCollection.doc(fieldId).get();
       if (fieldSnapshot.exists) {
-         timers.add(reservation['time'].toString());
         fields.add(Field.fromSnapshot(fieldSnapshot));
+        timers.add(reservation['time'].toString());
+        reservationIds.add(reservation.id);
       }
     }
 
     userFieldsList = fields;
     userFieldTimerList = timers;
+    userReservationIdList = reservationIds;
     
     print(fields);
   }

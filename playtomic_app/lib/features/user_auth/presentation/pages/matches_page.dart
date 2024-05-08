@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:playtomic_app/components/button/cbutton.dart';
 import 'package:playtomic_app/features/app/user_profile/MainUser.dart';
+import 'package:playtomic_app/features/user_auth/presentation/pages/home_page.dart';
 import 'package:playtomic_app/features/user_auth/presentation/pages/wedstrijden_list.dart';
 
 class WedstrijdenPage extends StatefulWidget {
@@ -37,18 +39,20 @@ class WedstrijdenPage extends StatefulWidget {
             decoration: const InputDecoration(hintText: 'Naam'),
           ),
           actions: [
-            TextButton(
+            CButton(
+              style: ButtonType.RED,
+              text: 'Annuleren',
               onPressed: () {
                 Navigator.pop(context);
               },
-              child: const Text('Annuleren'),
             ),
-            TextButton(
+            CButton(
+              style: ButtonType.PRIMARY,
+              text: 'Opslaan',
               onPressed: () {
                 Navigator.pop(
                     context, playerName); // Passing the playerName when saving
               },
-              child: const Text('Opslaan'),
             ),
           ],
         );
@@ -186,28 +190,22 @@ class _WedstrijdenState extends State<WedstrijdenPage> {
           content: SingleChildScrollView(
             child: ListBody(
               children: [
-                GestureDetector(
-                  onTap: () {
+                CButton(
+                  style: ButtonType.LIGHTBLUE,
+                  text:"Openbaar",
+                  onPressed: () {
                     Navigator.of(context).pop(true); // Openbare wedstrijd
                   },
-                  child: const Text(
-                    'Openbaar',
-                    style: TextStyle(
-                      fontSize: 18,
-                    ),
-                  ),
                 ),
-                GestureDetector(
-                  onTap: () {
-                    Navigator.of(context).pop(false); // Privé wedstrijd
+                const SizedBox(height: 20),
+                CButton(
+                  style: ButtonType.LIGHTBLUE,
+                  text:"Privé",
+                  onPressed: () {
+                     Navigator.of(context).pop(false); // Privé wedstrijd
                   },
-                  child: const Text(
-                    'Privé',
-                    style: TextStyle(
-                      fontSize: 18,
-                    ),
-                  ),
                 ),
+
               ],
             ),
           ),
@@ -234,32 +232,21 @@ class _WedstrijdenState extends State<WedstrijdenPage> {
   Future<List<ReservedField>> getReservedFields() async {
     String? currentUserId = MainUser.user.userId;
 
-    QuerySnapshot reservationSnapshot = await FirebaseFirestore.instance
-        .collection('reservations')
-        .where('userId', isEqualTo: currentUserId)
-        .get();
+     List<ReservedField> reservedFields = [];
 
-    List<ReservedField> reservedFields = [];
+    MainUser.user.userFieldsList ?? MainUser.getUserFields();
 
-    for (QueryDocumentSnapshot reservation in reservationSnapshot.docs) {
-      String fieldId = reservation['fieldId'];
-      String reservationId =
-          reservation.id; // Gebruik de id van de QueryDocumentSnapshot
-      DocumentSnapshot fieldSnapshot = await FirebaseFirestore.instance
-          .collection('fields')
-          .doc(fieldId)
-          .get();
-      String fieldName = fieldSnapshot['name'];
-      String reservationTime = reservation['time'];
-
-      reservedFields.add(ReservedField(
-        fieldId: fieldId,
-        fieldName: fieldName,
-        reservationTime: reservationTime,
+  for (int i = 0; i < MainUser.user.userFieldsList!.length; i++) {
+    Field field = MainUser.user.userFieldsList![i];
+    String timer = MainUser.user.userFieldTimerList![i];
+    String reservationId = MainUser.user.userReservationIdList![i];
+    reservedFields.add(ReservedField(
+        fieldId: field.documentId,
+        fieldName: field.name,
+        reservationTime: timer,
         reservationId: reservationId,
       ));
-    }
-
+  }
     return reservedFields;
   }
 }

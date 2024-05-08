@@ -5,7 +5,9 @@ enum ButtonType {
   PRIMARY,
   SECONDARY,
   DARK,
-  RED
+  RED,
+  SECONDARY_BLUE,
+  LIGHTBLUE
 }
 
 class CButton extends StatelessWidget{

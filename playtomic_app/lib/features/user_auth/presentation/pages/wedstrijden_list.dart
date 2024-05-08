@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:playtomic_app/components/button/cbutton.dart';
 import 'package:playtomic_app/features/user_auth/presentation/pages/match_details_page.dart';
 
 class OpenWedstrijdenPage extends StatelessWidget {
@@ -99,7 +100,9 @@ class OpenWedstrijdenPage extends StatelessWidget {
                                   },
                                   child: const Text('Join'),
                                 )
-                              : ElevatedButton(
+                              : CButton(
+                                  style: ButtonType.SECONDARY_BLUE,
+                                  text: 'Bekijk match details',
                                   onPressed: () {
                                     Navigator.push(
                                       context,
@@ -109,7 +112,6 @@ class OpenWedstrijdenPage extends StatelessWidget {
                                       ),
                                     );
                                   },
-                                  child: const Text('Bekijk match details'),
                                 ),
                         ),
                       ],
