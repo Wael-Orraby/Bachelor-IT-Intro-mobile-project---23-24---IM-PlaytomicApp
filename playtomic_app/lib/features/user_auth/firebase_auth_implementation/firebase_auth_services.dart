@@ -36,4 +36,6 @@ class FirebaseAuthService {
     }
     return null;
   }
+
+  void fetchSignInMethodsForEmail(String s) {}
 }

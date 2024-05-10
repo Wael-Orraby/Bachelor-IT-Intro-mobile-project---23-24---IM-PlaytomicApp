@@ -1,5 +1,6 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:playtomic_app/features/user_auth/presentation/pages/home_page.dart';
 
 class UserData{
@@ -65,13 +66,34 @@ class UserData{
       // Access the user data
       userName = mainUserSnapshot['userName'];
       country = mainUserSnapshot['country'];
-
       // You can update other MainUser fields similarly
     } else {
       print('User not found');
     }
   }
 
+ static Future<UserData?> getUserById(String docId) async {
+    try {
+      DocumentSnapshot userDoc = await FirebaseFirestore.instance.collection('users').doc(docId).get();
+
+      if (userDoc.exists) {
+        UserData userData = UserData(
+          documentId: userDoc.id,
+          userId: null, // Assuming document ID is also user ID
+          userName: userDoc['userName'],
+          country: userDoc['country'],
+        );
+
+        return userData;
+      } else {
+        print('User with ID $docId not found in Firestore');
+        return null;
+      }
+    } catch (e) {
+      print('Error retrieving user data: $e');
+      return null;
+    }
+  }
   void updateDb(){
     if (userName == null || email == null) {
       print('Error: Some required data is null');

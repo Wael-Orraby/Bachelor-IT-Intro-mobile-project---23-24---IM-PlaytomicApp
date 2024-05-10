@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/widgets.dart';
 import 'package:playtomic_app/components/button/cbutton.dart';
 import 'package:playtomic_app/features/app/user_profile/MainUser.dart';
 import 'package:playtomic_app/features/user_auth/presentation/pages/home_page.dart';
@@ -24,51 +25,53 @@ class WedstrijdenPage extends StatefulWidget {
     String time = selectedField.reservationTime;
     String location = selectedField.fieldName;
 
-    String? playerName; // Declare the playerName variable here
+    String? playerId; // Declare the playerId variable here
 
     // Show dialog to enter player name
-    playerName = await showDialog<String>(
+    playerId = await showDialog<String>(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: const Text('Voer je naam in'),
-          content: TextField(
-            onChanged: (value) {
-              playerName = value;
-            },
-            decoration: const InputDecoration(hintText: 'Naam'),
+          title: const Text('Reservation details'),
+          content: SizedBox(
+            width: double.minPositive,
+            height: double.minPositive,
+            child: ListView(
+              shrinkWrap: true,
+              children: [
+                Text("Veld: ${selectedField.fieldName}"),
+                Text("Tijd: ${selectedField.reservationTime}"),
+                Text("Toegang: ${isPublic ? 'Public' : 'Private'}"),
+              ],
+            ),
           ),
           actions: [
             CButton(
               style: ButtonType.RED,
               text: 'Annuleren',
-              onPressed: () {
-                Navigator.pop(context);
-              },
+              onPressed: () => Navigator.pop(context),
             ),
             CButton(
               style: ButtonType.PRIMARY,
               text: 'Opslaan',
-              onPressed: () {
-                Navigator.pop(
-                    context, playerName); // Passing the playerName when saving
-              },
+              onPressed: () => Navigator.pop(context, MainUser.user.documentId),
             ),
           ],
         );
       },
     );
 
-    if (playerName != null) {
+    if (playerId != null) {
       // Maak de wedstrijd in de Firestore-collectie 'matches'
       DocumentReference matchRef =
           await FirebaseFirestore.instance.collection('matches').add({
         'time': time,
         'location': location,
-        'team1': [playerName], // Include the playerName here
+        'team1': [playerId], // Include the playerId here
         'team2': [],
         'available_slots': 3,
         'isPublic': isPublic,
+        'owner': MainUser.user.documentId,
       });
 
       // Verwijder de geselecteerde reservering uit de Firestore-collectie 'reservations'
@@ -87,7 +90,6 @@ class _WedstrijdenState extends State<WedstrijdenPage> {
 
   static final List<Widget> _widgetOptions = <Widget>[
     const OpenWedstrijdenPage(),
-    const UserWedstrijdenPage(),
   ];
 
   void _onItemTapped(int index) {
@@ -192,7 +194,7 @@ class _WedstrijdenState extends State<WedstrijdenPage> {
               children: [
                 CButton(
                   style: ButtonType.LIGHTBLUE,
-                  text:"Openbaar",
+                  text: "Openbaar",
                   onPressed: () {
                     Navigator.of(context).pop(true); // Openbare wedstrijd
                   },
@@ -200,12 +202,11 @@ class _WedstrijdenState extends State<WedstrijdenPage> {
                 const SizedBox(height: 20),
                 CButton(
                   style: ButtonType.LIGHTBLUE,
-                  text:"Privé",
+                  text: "Privé",
                   onPressed: () {
-                     Navigator.of(context).pop(false); // Privé wedstrijd
+                    Navigator.of(context).pop(false); // Privé wedstrijd
                   },
                 ),
-
               ],
             ),
           ),
@@ -232,21 +233,21 @@ class _WedstrijdenState extends State<WedstrijdenPage> {
   Future<List<ReservedField>> getReservedFields() async {
     String? currentUserId = MainUser.user.userId;
 
-     List<ReservedField> reservedFields = [];
+    List<ReservedField> reservedFields = [];
 
     MainUser.user.userFieldsList ?? MainUser.getUserFields();
 
-  for (int i = 0; i < MainUser.user.userFieldsList!.length; i++) {
-    Field field = MainUser.user.userFieldsList![i];
-    String timer = MainUser.user.userFieldTimerList![i];
-    String reservationId = MainUser.user.userReservationIdList![i];
-    reservedFields.add(ReservedField(
+    for (int i = 0; i < MainUser.user.userFieldsList!.length; i++) {
+      Field field = MainUser.user.userFieldsList![i];
+      String timer = MainUser.user.userFieldTimerList![i];
+      String reservationId = MainUser.user.userReservationIdList![i];
+      reservedFields.add(ReservedField(
         fieldId: field.documentId,
         fieldName: field.name,
         reservationTime: timer,
         reservationId: reservationId,
       ));
-  }
+    }
     return reservedFields;
   }
 }
