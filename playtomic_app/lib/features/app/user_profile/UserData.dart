@@ -83,7 +83,8 @@ class UserData{
           userName: userDoc['userName'],
           country: userDoc['country'],
         );
-
+        print(userData.documentId);
+        print(userData.userName);
         return userData;
       } else {
         print('User with ID $docId not found in Firestore');
@@ -94,6 +95,7 @@ class UserData{
       return null;
     }
   }
+
   void updateDb(){
     if (userName == null || email == null) {
       print('Error: Some required data is null');

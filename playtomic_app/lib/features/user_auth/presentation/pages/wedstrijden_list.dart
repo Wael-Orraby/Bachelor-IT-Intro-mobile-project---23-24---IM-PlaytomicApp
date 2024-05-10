@@ -60,9 +60,7 @@ class OpenWedstrijdenPage extends StatelessWidget {
       bool isPublic = data['isPublic'] ?? false;
       bool isCompleted = data['status'] == 'completed';
       String winner = data['winner'] ?? '';
-      print('User start');
       UserData? owner = await UserData.getUserById(data['owner']);
-      print('User end');
       List<String> team1 = List<String>.from(data['team1'] ?? []);
       List<String> team2 = List<String>.from(data['team2'] ?? []);
       bool isJoinable = availableSlots > 0;
@@ -83,9 +81,7 @@ class OpenWedstrijdenPage extends StatelessWidget {
           break;
         }
       }
-      print(owner);
-      print(owner!.documentId);
-      if (owner.documentId == MainUser.user.documentId) imOwner = true;
+      if (owner!.documentId == MainUser.user.documentId) imOwner = true;
       if (owner.documentId == MainUser.user.documentId) imOwner = true;
 
       widgets.add(
