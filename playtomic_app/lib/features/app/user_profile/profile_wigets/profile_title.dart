@@ -17,7 +17,7 @@ class ProfileTitle extends StatefulWidget {
 
 class _ProfileTitleState extends State<ProfileTitle> {
   final TextEditingController _textEditingController = TextEditingController();
-  bool loading = false;
+  bool loading = true;
   @override
   void initState() {
     super.initState();
@@ -26,12 +26,11 @@ class _ProfileTitleState extends State<ProfileTitle> {
 
   Future<void> _initializeTotaalPlayed() async {
     print(MainUser.user.userName);
-    if (MainUser.user.userName == null) {
-      loading = true;
-    }
     await MainUser.getMainUser().then((_) async {
       print(MainUser.user.userFieldsList!.length);
-      print(loading);
+      // ignore: avoid_print
+      print("loading: ${loading}");
+      print("user-main: ${MainUser.user.userName}");
       if (mounted) {
         setState(() {});
       }
@@ -97,7 +96,7 @@ class _ProfileTitleState extends State<ProfileTitle> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    "Totaal Games: ${MainUser.countTotaalPlayed()}",
+                    "Mijn reservaties: ${MainUser.countTotaalPlayed()}",
                     style: const TextStyle(fontSize: 30),
                   ),
                   Row(

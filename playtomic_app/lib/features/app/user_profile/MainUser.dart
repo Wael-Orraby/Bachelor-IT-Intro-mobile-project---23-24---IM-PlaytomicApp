@@ -9,17 +9,13 @@ class MainUser {
   // FIELDS ID's
   static Field? currentGame;
   static String? currentGameId;
-  static bool loadingUser = false;
   static Future<void> getUserFields() async {
     await user.getUserFields();
   }
 
   static Future<void> getMainUser() async {
-    if(loadingUser) return;
-    loadingUser = true;
     getUserFields();
     await user.getUser();
-    loadingUser = false;
   }
 //MABY NEED TO BE EDITED
 

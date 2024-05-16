@@ -9,13 +9,13 @@ class UserData{
   String? email; // "wael1@gmail.com";
   String? userName;
   String? country;
-  int wins = 0;
-  int losses = 0;
+  int? wins = 0;
+  int? losses = 0;
   List<Field>? userFieldsList;
   List<String>? userFieldTimerList;
   List<String>? userReservationIdList;
 
-  UserData({this.documentId, this.userId, this.email, this.userName, this.country});
+  UserData({this.documentId, this.userId, this.email, this.userName, this.country, this.wins, this.losses});
 
 
   Future<void> getUserFields() async {
@@ -66,6 +66,8 @@ class UserData{
       // Access the user data
       userName = mainUserSnapshot['userName'];
       country = mainUserSnapshot['country'];
+      wins = mainUserSnapshot['wins'];
+      losses = mainUserSnapshot['losses'];
       // You can update other MainUser fields similarly
     } else {
       print('User not found');
@@ -82,9 +84,13 @@ class UserData{
           userId: null, // Assuming document ID is also user ID
           userName: userDoc['userName'],
           country: userDoc['country'],
+          email: userDoc['email'],
+          losses: userDoc['losses'],
+          wins: userDoc['wins'],
         );
-        print(userData.documentId);
-        print(userData.userName);
+        print("Get user: ${userData.documentId}");
+        print("Get user: ${userData.userName}");
+        print("Get user: ${userData.email}");
         return userData;
       } else {
         print('User with ID $docId not found in Firestore');
@@ -96,16 +102,16 @@ class UserData{
     }
   }
 
-  void updateDb(){
+  Future<void> updateDb() async{
     if (userName == null || email == null) {
       print('Error: Some required data is null');
       return;
     }
 
-    print("doc: ${documentId}");
-    print("id: ${userId}");
-    print("username: $userName");
-    print("email: $email");
+    // print("doc: ${documentId}");
+    // print("id: ${userId}");
+    // print("username: $userName");
+    // print("email: $email");
     FirebaseFirestore.instance
         .collection('users') // Specify the collection
         .doc(documentId) // Specify the document ID

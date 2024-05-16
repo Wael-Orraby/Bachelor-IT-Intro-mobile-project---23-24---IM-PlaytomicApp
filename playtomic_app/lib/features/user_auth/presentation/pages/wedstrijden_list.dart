@@ -50,7 +50,8 @@ class OpenWedstrijdenPage extends StatelessWidget {
   }
 
   Future<List<Widget>> _buildMatchWidgets(
-      List<DocumentSnapshot> documents, BuildContext context) async {
+    List<DocumentSnapshot> documents, BuildContext context) async {
+    await MainUser.getMainUser();
     List<Widget> widgets = [];
     for (DocumentSnapshot document in documents) {
       Map<String, dynamic> data = document.data() as Map<String, dynamic>;
@@ -317,7 +318,40 @@ void assignTeamsAndDeclareWinnerWithSets(
 
   // Determining the winner based on sets
   GameResult winner = determineGameWinner(sets);
-
+  if(winner == GameResult.Team1Wins){
+    print("win1");
+    for (String t1 in team1Players) {
+      UserData? u = await UserData.getUserById(t1);
+      if(u == null) continue;
+      print("Mail: ${u.email}");
+      u.wins = u.wins! + 1;
+      u.updateDb();
+    }
+    for (String t2 in team2Players) {
+      UserData? u = await UserData.getUserById(t2);
+      if(u == null) continue;
+      print("Mail: ${u.email}");
+      u.losses = u.losses! + 1;
+      u.updateDb();
+    }
+  }
+  else if(winner == GameResult.Team2Wins){
+    print("win2");
+    for (String t1 in team1Players) {
+      UserData? u = await UserData.getUserById(t1);
+      if(u == null) continue;
+      print("Mail: ${u.email}");
+      u.losses = u.losses! + 1;
+      await u.updateDb();
+    }
+    for (String t2 in team2Players) {
+      UserData? u = await UserData.getUserById(t2);
+      if(u == null) continue;
+      print("Mail: ${u.email}");
+      u.wins = u.wins! + 1;
+      await u.updateDb();
+    }
+  }
   // Update data in Firestore
   await FirebaseFirestore.instance.collection('matches').doc(matchId).update({
     'team1': team1Players,
