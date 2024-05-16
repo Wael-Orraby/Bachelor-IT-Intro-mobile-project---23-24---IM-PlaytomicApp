@@ -1,5 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:playtomic_app/features/app/user_profile/MainUser.dart';
 import 'package:playtomic_app/features/user_auth/firebase_auth_implementation/firebase_auth_services.dart';
 import 'package:playtomic_app/features/user_auth/presentation/pages/login_page.dart';
 import 'package:playtomic_app/features/user_auth/presentation/widgets/form_container_widget.dart';
@@ -16,6 +18,7 @@ class _SignUpPageState extends State<SignUpPage> {
   final FirebaseAuthService _auth = FirebaseAuthService();
 
   final TextEditingController _usernameController = TextEditingController();
+  final TextEditingController _countryController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
@@ -24,6 +27,7 @@ class _SignUpPageState extends State<SignUpPage> {
   @override
   void dispose() {
     _usernameController.dispose();
+    _countryController.dispose();
     _emailController.dispose();
     _passwordController.dispose();
     super.dispose();
@@ -52,6 +56,14 @@ class _SignUpPageState extends State<SignUpPage> {
               FormContainerWidget(
                 controller: _usernameController,
                 hintText: "Username",
+                isPasswordField: false,
+              ),
+              const SizedBox(
+                height: 10,
+              ),
+              FormContainerWidget(
+                controller: _countryController,
+                hintText: "Country",
                 isPasswordField: false,
               ),
               const SizedBox(
@@ -136,7 +148,9 @@ class _SignUpPageState extends State<SignUpPage> {
 
     //String username = _usernameController.text;
     String email = _emailController.text;
+    String country = _countryController.text;
     String password = _passwordController.text;
+    String userName = _usernameController.text;
 
     User? user = await _auth.signUpWithEmailAndPassword(email, password);
 
@@ -145,6 +159,14 @@ class _SignUpPageState extends State<SignUpPage> {
     });
     if (user != null) {
       showToast(message: "User is successfully created");
+      DocumentReference userhRef =
+          await FirebaseFirestore.instance.collection('users').add({
+        'email': email,
+        'userName': userName,
+        'country': country,
+        'losses': 0,
+        'wins': 0,
+      });
       // ignore: use_build_context_synchronously
       Navigator.pushNamed(context, "/home");
     } else {
