@@ -65,13 +65,13 @@ class _ProfileTitleState extends State<ProfileTitle> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const CImage(
-                    imagePath: "evil.jpg",
+                    imagePath: "user.jpg",
                     style: ImageStyle.ROUND_SHADOW,
-                    width: 70,
-                    height: 70,
+                    width: 80,
+                    height: 80,
                   ),
                   const SizedBox(
-                    width: 30,
+                    width: 15,
                   ),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
