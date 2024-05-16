@@ -90,6 +90,7 @@ class _WedstrijdenState extends State<WedstrijdenPage> {
 
   static final List<Widget> _widgetOptions = <Widget>[
     const OpenWedstrijdenPage(),
+    const UserWedstrijdenPage(),
   ];
 
   void _onItemTapped(int index) {

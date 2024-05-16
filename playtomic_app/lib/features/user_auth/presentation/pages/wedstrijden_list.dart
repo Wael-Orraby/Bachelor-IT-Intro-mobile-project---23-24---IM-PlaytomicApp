@@ -384,3 +384,64 @@ List<MatchSet> generateSets(int numberOfSets) {
 
   return sets;
 }
+
+class UserWedstrijdenPage extends StatelessWidget {
+  const UserWedstrijdenPage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Mijn Wedstrijden'),
+      ),
+      body: StreamBuilder<QuerySnapshot>(
+        stream: FirebaseFirestore.instance
+            .collection('matches')
+            .where('isPublic', isEqualTo: false)
+            .snapshots(),
+        builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          }
+
+          if (snapshot.hasError) {
+            return Text('Error: ${snapshot.error}');
+          }
+
+          if (snapshot.data == null || snapshot.data!.docs.isEmpty) {
+            return const Center(
+                child: Text('Geen privé wedstrijden beschikbaar'));
+          }
+
+          return ListView(
+            children: snapshot.data!.docs.map((DocumentSnapshot document) {
+              Map<String, dynamic> data =
+                  document.data() as Map<String, dynamic>;
+              String title = data['title'] ?? '';
+              String location = data['location'] ?? '';
+              String time = data['time'] ?? '';
+              int availableSlots = data['available_slots'] ?? 0;
+              bool isPublic = data['isPublic'] ?? false;
+
+              return ListTile(
+                title: Text(title),
+                subtitle: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('Locatie: $location'),
+                    Text('Tijd: $time'),
+                    Text('Beschikbare plaatsen: $availableSlots'),
+                    Text(isPublic ? 'Openbaar' : 'Privé'),
+                  ],
+                ),
+                onTap: () {
+                  // Navigatielogica om naar de details van de wedstrijd te gaan
+                },
+              );
+            }).toList(),
+          );
+        },
+      ),
+    );
+  }
+}
