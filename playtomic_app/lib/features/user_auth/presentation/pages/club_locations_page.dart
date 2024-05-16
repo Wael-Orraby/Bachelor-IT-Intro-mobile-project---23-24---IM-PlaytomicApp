@@ -21,14 +21,14 @@ class _ClubLocationsPageState extends State<ClubLocationsPage> {
       appBar: AppBar(
         title: const Text('Clublocaties'),
       ),
-      // body: GoogleMap(
-      //   onMapCreated: _onMapCreated,
-      //   initialCameraPosition: const CameraPosition(
-      //     target: LatLng(51.2194, 4.4025), // Antwerpen-coördinaten
-      //     zoom: 12.0,
-      //   ),
-      //   markers: _markers,
-      // ),
+      body: GoogleMap(
+        onMapCreated: _onMapCreated,
+        initialCameraPosition: const CameraPosition(
+          target: LatLng(51.2194, 4.4025), // Antwerpen-coördinaten
+          zoom: 12.0,
+        ),
+        markers: _markers,
+      ),
       bottomNavigationBar: const MyBottomNavigationBar(),
     );
   }
