@@ -161,12 +161,14 @@ class _SignUpPageState extends State<SignUpPage> {
       showToast(message: "User is successfully created");
       DocumentReference userhRef =
           await FirebaseFirestore.instance.collection('users').add({
-        'email': email,
+        'email': email.toLowerCase(),
         'userName': userName,
         'country': country,
         'losses': 0,
         'wins': 0,
       });
+      MainUser.user.email = email.toLowerCase();
+      MainUser.getMainUser();
       // ignore: use_build_context_synchronously
       Navigator.pushNamed(context, "/home");
     } else {

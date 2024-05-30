@@ -54,6 +54,9 @@ class UserData{
     print(fields);
   }
    Future<void> getUser() async {
+     print("GET USER");
+     print("MAIL $email");
+     print("DocID $documentId");
     CollectionReference? userCollection =
         FirebaseFirestore.instance.collection('users');
     QuerySnapshot querySnapshot =
@@ -75,6 +78,7 @@ class UserData{
   }
 
  static Future<UserData?> getUserById(String docId) async {
+   print("Get user: ${docId}");
     try {
       DocumentSnapshot userDoc = await FirebaseFirestore.instance.collection('users').doc(docId).get();
 
@@ -90,6 +94,9 @@ class UserData{
         );
         print("Get user: ${userData.documentId}");
         print("Get user: ${userData.userName}");
+        print("Get user: ${userData.email}");
+        print("Get user: ${userData.losses}");
+        print("Get user: ${userData.wins}");
         print("Get user: ${userData.email}");
         return userData;
       } else {

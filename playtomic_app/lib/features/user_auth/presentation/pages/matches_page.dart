@@ -26,7 +26,6 @@ class WedstrijdenPage extends StatefulWidget {
     String location = selectedField.fieldName;
 
     String? playerId; // Declare the playerId variable here
-
     // Show dialog to enter player name
     playerId = await showDialog<String>(
       context: context,
@@ -73,7 +72,6 @@ class WedstrijdenPage extends StatefulWidget {
         'isPublic': isPublic,
         'owner': MainUser.user.documentId,
       });
-
       // Verwijder de geselecteerde reservering uit de Firestore-collectie 'reservations'
       await deleteReservation(selectedField.reservationId);
 
@@ -214,10 +212,12 @@ class _WedstrijdenState extends State<WedstrijdenPage> {
         );
       },
     );
-
+  print("end of wiget..");
     // Als geen type wedstrijd is geselecteerd, stop dan met de methode
-    if (isPublic == null)
+    if (isPublic == null){
+      print(isPublic);
       return;
+    }
     else {
       // Terug naar de WedstrijdenPage
       Navigator.of(context).pushReplacement(
@@ -226,9 +226,9 @@ class _WedstrijdenState extends State<WedstrijdenPage> {
         ),
       );
     }
-
+  print("new wiget normaly");
     // Maak de wedstrijd en verwijder de reservering
-    widget.createMatchAndDeleteReservation(context, selectedField, isPublic);
+   await widget.createMatchAndDeleteReservation(context, selectedField, isPublic);
   }
 
   Future<List<ReservedField>> getReservedFields() async {

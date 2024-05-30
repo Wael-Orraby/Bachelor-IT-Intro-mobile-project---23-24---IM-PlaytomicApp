@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/widgets.dart';
 import 'package:playtomic_app/components/button/cbutton.dart';
 import 'package:playtomic_app/features/app/user_profile/MainUser.dart';
 import 'package:playtomic_app/features/app/user_profile/UserData.dart';
@@ -50,10 +51,12 @@ class OpenWedstrijdenPage extends StatelessWidget {
   }
 
   Future<List<Widget>> _buildMatchWidgets(
-    List<DocumentSnapshot> documents, BuildContext context) async {
+      List<DocumentSnapshot> documents, BuildContext context) async {
     await MainUser.getMainUser();
     List<Widget> widgets = [];
+          int index = 0;
     for (DocumentSnapshot document in documents) {
+      index++;
       Map<String, dynamic> data = document.data() as Map<String, dynamic>;
       String location = data['location'] ?? '';
       String time = data['time'] ?? '';
@@ -68,6 +71,7 @@ class OpenWedstrijdenPage extends StatelessWidget {
       bool imOwner = false;
       String imOwnerTeam = '';
       bool imInTeam = false;
+
       for (String id in team1) {
         if (id == MainUser.user.documentId) {
           imInTeam = true;
@@ -103,12 +107,24 @@ class OpenWedstrijdenPage extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    "From user: ${owner.userName!}",
-                    style: const TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    ),
+                  Row(
+                    children: [
+                      Text(
+                        "$index) ",
+                        style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+
+                      Text(
+                        "From user: ${owner.userName!}",
+                        style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
                   ),
                   const SizedBox(height: 8),
                   Text('Locatie: $location'),
@@ -318,35 +334,34 @@ void assignTeamsAndDeclareWinnerWithSets(
 
   // Determining the winner based on sets
   GameResult winner = determineGameWinner(sets);
-  if(winner == GameResult.Team1Wins){
+  if (winner == GameResult.Team1Wins) {
     print("win1");
     for (String t1 in team1Players) {
       UserData? u = await UserData.getUserById(t1);
-      if(u == null) continue;
+      if (u == null) continue;
       print("Mail: ${u.email}");
       u.wins = u.wins! + 1;
       u.updateDb();
     }
     for (String t2 in team2Players) {
       UserData? u = await UserData.getUserById(t2);
-      if(u == null) continue;
+      if (u == null) continue;
       print("Mail: ${u.email}");
       u.losses = u.losses! + 1;
       u.updateDb();
     }
-  }
-  else if(winner == GameResult.Team2Wins){
+  } else if (winner == GameResult.Team2Wins) {
     print("win2");
     for (String t1 in team1Players) {
       UserData? u = await UserData.getUserById(t1);
-      if(u == null) continue;
+      if (u == null) continue;
       print("Mail: ${u.email}");
       u.losses = u.losses! + 1;
       await u.updateDb();
     }
     for (String t2 in team2Players) {
       UserData? u = await UserData.getUserById(t2);
-      if(u == null) continue;
+      if (u == null) continue;
       print("Mail: ${u.email}");
       u.wins = u.wins! + 1;
       await u.updateDb();
@@ -421,7 +436,6 @@ List<MatchSet> generateSets(int numberOfSets) {
 
 class UserWedstrijdenPage extends StatelessWidget {
   const UserWedstrijdenPage({super.key});
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -446,7 +460,7 @@ class UserWedstrijdenPage extends StatelessWidget {
             return const Center(
                 child: Text('Geen privé wedstrijden beschikbaar'));
           }
-
+          String owner = '';
           return ListView(
             children: snapshot.data!.docs.map((DocumentSnapshot document) {
               Map<String, dynamic> data =
@@ -456,7 +470,14 @@ class UserWedstrijdenPage extends StatelessWidget {
               String time = data['time'] ?? '';
               int availableSlots = data['available_slots'] ?? 0;
               bool isPublic = data['isPublic'] ?? false;
-
+              if (owner != MainUser.user.documentId && owner != '') {
+                return const Text("");
+              }
+              owner = data['owner'] ?? '';
+              if (owner != MainUser.user.documentId) {
+                print("Owner private: " + owner);
+                return const Text("Je hebt geen prive games");
+              }
               return ListTile(
                 title: Text(title),
                 subtitle: Column(

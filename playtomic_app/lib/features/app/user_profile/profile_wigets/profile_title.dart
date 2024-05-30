@@ -17,7 +17,6 @@ class ProfileTitle extends StatefulWidget {
 
 class _ProfileTitleState extends State<ProfileTitle> {
   final TextEditingController _textEditingController = TextEditingController();
-  bool loading = true;
   @override
   void initState() {
     super.initState();
@@ -26,16 +25,15 @@ class _ProfileTitleState extends State<ProfileTitle> {
 
   Future<void> _initializeTotaalPlayed() async {
     print(MainUser.user.userName);
+    await MainUser.getUserFields();
     await MainUser.getMainUser().then((_) async {
       print(MainUser.user.userFieldsList!.length);
       // ignore: avoid_print
-      print("loading: ${loading}");
       print("user-main: ${MainUser.user.userName}");
       if (mounted) {
         setState(() {});
       }
     });
-    loading = false;
   }
 
   @override
@@ -60,7 +58,6 @@ class _ProfileTitleState extends State<ProfileTitle> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            if (!loading)
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -91,7 +88,6 @@ class _ProfileTitleState extends State<ProfileTitle> {
                   ),
                 ],
               ),
-            if (!loading)
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -111,19 +107,6 @@ class _ProfileTitleState extends State<ProfileTitle> {
                     ],
                   ),
                 ],
-              ),
-            if (loading)
-              const Center(
-                child: Column(
-                  children: [
-                    CircularProgressIndicator(),
-                    SizedBox(height: 10),
-                    Text(
-                      "Loading...",
-                      style: TextStyle(fontSize: 18),
-                    ),
-                  ],
-                ),
               ),
             const Divider(color: Colors.black),
             Row(
