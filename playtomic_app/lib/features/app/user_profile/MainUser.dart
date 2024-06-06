@@ -14,14 +14,14 @@ class MainUser {
   }
 
   static Future<void> getMainUser() async {
-    getUserFields();
+    await getUserFields();
     await user.getUser();
   }
 //MABY NEED TO BE EDITED
 
   static void logOut() {
-    clearUser();
     FirebaseAuth.instance.signOut();
+    clearUser();
     print("loged out");
   }
 

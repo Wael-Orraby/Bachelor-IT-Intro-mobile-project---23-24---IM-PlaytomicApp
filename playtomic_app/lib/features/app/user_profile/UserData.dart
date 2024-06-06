@@ -19,7 +19,13 @@ class UserData{
 
   Future<void> getUserFields() async {
     //GET DATA
-    print("getinging user fields: ${email!}");
+    print("getinging user fields: ${email!}");  
+    print(userName);
+    print(documentId);
+    print(userId);
+    userFieldsList = null;
+    userFieldTimerList = null;
+    userReservationIdList = null;
     CollectionReference? reservationsCollection =
         FirebaseFirestore.instance.collection('reservations');
     CollectionReference? fieldsCollection =
@@ -27,7 +33,7 @@ class UserData{
 
     // Count documents in collections
     QuerySnapshot userReservationsSnapshot =
-        await reservationsCollection.where('userId', isEqualTo: userId).get();
+        await reservationsCollection.where('userId', isEqualTo: documentId).get();
 
     List<Field> fields = [];
     List<String> timers = [];
@@ -134,12 +140,15 @@ class UserData{
   
   void clearUser() {
     documentId = null;
-    userId = null;
-    country = null;
-    email = null;
-    losses = 0;
+    userId = null; // 'n3DEgoZvQVP2dSvtohA9pKjHqNo2';
+    email = null; // "wael1@gmail.com";
     userName = null;
+    country = null;
     wins = 0;
+    losses = 0;
+    userFieldsList = null;
+    userFieldTimerList = null;
+    userReservationIdList = null;
   }
 
 }

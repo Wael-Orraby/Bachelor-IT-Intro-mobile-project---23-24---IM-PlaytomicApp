@@ -167,6 +167,7 @@ class _SignUpPageState extends State<SignUpPage> {
         'losses': 0,
         'wins': 0,
       });
+      MainUser.clearUser();
       MainUser.user.email = email.toLowerCase();
       MainUser.getMainUser();
       MainUser.getUserFields();
