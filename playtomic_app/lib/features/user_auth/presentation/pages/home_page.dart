@@ -31,7 +31,7 @@ class MyApp extends StatelessWidget {
         '/': (context) => const HomePage(),
         '/login': (context) => const LoginPage(),
         '/club_locations': (context) => const ClubLocationsPage(),
-        '/wedstrijden': (context) => WedstrijdenPage(),
+        '/wedstrijden': (context) => const WedstrijdenPage(),
       },
       // Plaats BottomNavigationBar buiten Scaffold
       home: const Scaffold(
@@ -181,8 +181,7 @@ class FieldListItem extends StatelessWidget {
                   ),
                   const SizedBox(height: 5),
                   Text(
-                    field.availableTimes != null &&
-                            field.availableTimes.isNotEmpty
+                    field.availableTimes.isNotEmpty
                         ? 'Available Times: ${field.availableTimes.join(", ")}'
                         : 'Available Times: ${"Geen"}',
                     style: const TextStyle(fontSize: 16),
@@ -216,7 +215,7 @@ class FieldListItem extends StatelessWidget {
                     );
                   }).toList()
                 : [
-                    ListTile(
+                    const ListTile(
                       title: Text(
                         'Er zijn helaas geen tijden meer beschikbaar',
                       ),

@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/widgets.dart';
 import 'package:playtomic_app/components/button/cbutton.dart';
 import 'package:playtomic_app/features/app/user_profile/MainUser.dart';
 import 'package:playtomic_app/features/user_auth/presentation/pages/home_page.dart';
 import 'package:playtomic_app/features/user_auth/presentation/pages/wedstrijden_list.dart';
 
 class WedstrijdenPage extends StatefulWidget {
-  const WedstrijdenPage({Key? key}) : super(key: key);
+  const WedstrijdenPage({super.key});
 
   @override
   _WedstrijdenState createState() => _WedstrijdenState();

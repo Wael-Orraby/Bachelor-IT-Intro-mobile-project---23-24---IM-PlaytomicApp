@@ -23,8 +23,8 @@ class CButtonStyle{
         buttonColor = Colors.red;
         textColor = Colors.white;
       case ButtonType.SECONDARY_BLUE:
-        buttonColor = Color.fromARGB(255, 189, 190, 190);
-        textColor = Color.fromARGB(255, 52, 71, 87);
+        buttonColor = const Color.fromARGB(255, 189, 190, 190);
+        textColor = const Color.fromARGB(255, 52, 71, 87);
       break;
       case ButtonType.LIGHTBLUE:
         buttonColor = const Color.fromARGB(255, 185, 214, 227);

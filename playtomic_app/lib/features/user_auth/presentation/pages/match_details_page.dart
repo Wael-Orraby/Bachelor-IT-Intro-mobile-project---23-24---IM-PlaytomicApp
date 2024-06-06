@@ -5,7 +5,7 @@ import 'package:playtomic_app/features/app/user_profile/UserData.dart';
 class MatchDetailsPage extends StatefulWidget {
   final String matchId;
 
-  MatchDetailsPage({Key? key, required this.matchId}) : super(key: key);
+  const MatchDetailsPage({super.key, required this.matchId});
 
   @override
   _MatchDetailsPageState createState() => _MatchDetailsPageState();

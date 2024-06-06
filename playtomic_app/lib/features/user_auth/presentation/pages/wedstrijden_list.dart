@@ -2,7 +2,6 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/widgets.dart';
 import 'package:playtomic_app/components/button/cbutton.dart';
 import 'package:playtomic_app/features/app/user_profile/MainUser.dart';
 import 'package:playtomic_app/features/app/user_profile/UserData.dart';
@@ -475,7 +474,7 @@ class UserWedstrijdenPage extends StatelessWidget {
               }
               owner = data['owner'] ?? '';
               if (owner != MainUser.user.documentId) {
-                print("Owner private: " + owner);
+                print("Owner private: $owner");
                 return const Text("Je hebt geen prive games");
               }
               return ListTile(

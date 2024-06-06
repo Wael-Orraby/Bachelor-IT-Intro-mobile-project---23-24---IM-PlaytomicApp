@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:playtomic_app/features/user_auth/presentation/pages/home_page.dart';
-import 'package:playtomic_app/components/button/cbutton.dart';
 import 'package:playtomic_app/features/app/user_profile/MainUser.dart';
 
 class ProfileAbout extends StatefulWidget {
@@ -11,7 +10,7 @@ class ProfileAbout extends StatefulWidget {
 }
 
 class _ProfileAboutState extends State<ProfileAbout> {
-  late ValueNotifier<DateTime> _selectedDay = ValueNotifier(DateTime.now());
+  late final ValueNotifier<DateTime> _selectedDay = ValueNotifier(DateTime.now());
 
   @override
   void initState() {

@@ -1,6 +1,5 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:playtomic_app/features/user_auth/presentation/pages/home_page.dart';
 
 class UserData{
@@ -20,7 +19,7 @@ class UserData{
 
   Future<void> getUserFields() async {
     //GET DATA
-    print("getinging user fields: " + email!);
+    print("getinging user fields: ${email!}");
     CollectionReference? reservationsCollection =
         FirebaseFirestore.instance.collection('reservations');
     CollectionReference? fieldsCollection =
@@ -78,7 +77,7 @@ class UserData{
   }
 
  static Future<UserData?> getUserById(String docId) async {
-   print("Get user: ${docId}");
+   print("Get user: $docId");
     try {
       DocumentSnapshot userDoc = await FirebaseFirestore.instance.collection('users').doc(docId).get();
 
