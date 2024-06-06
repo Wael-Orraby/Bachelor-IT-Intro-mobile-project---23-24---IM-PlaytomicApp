@@ -168,9 +168,10 @@ class _SignUpPageState extends State<SignUpPage> {
         'wins': 0,
       });
       MainUser.clearUser();
-      MainUser.user.email = email.toLowerCase();
-      MainUser.getMainUser();
-      MainUser.getUserFields();
+      MainUser.user.email = user.email.toString();
+      MainUser.user.userId = user.uid;
+      await MainUser.getUserFields();
+      await MainUser.getMainUser();
       // ignore: use_build_context_synchronously
       Navigator.pushNamed(context, "/home");
     } else {

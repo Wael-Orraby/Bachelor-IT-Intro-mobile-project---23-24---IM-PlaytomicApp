@@ -435,68 +435,69 @@ List<MatchSet> generateSets(int numberOfSets) {
 
 class UserWedstrijdenPage extends StatelessWidget {
   const UserWedstrijdenPage({super.key});
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Mijn Wedstrijden'),
-      ),
-      body: StreamBuilder<QuerySnapshot>(
-        stream: FirebaseFirestore.instance
-            .collection('matches')
-            .where('isPublic', isEqualTo: false)
-            .snapshots(),
-        builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          }
+ Widget build(BuildContext context) {
+  return Scaffold(
+    appBar: AppBar(
+      title: const Text('Mijn Wedstrijden'),
+    ),
+    body: StreamBuilder<QuerySnapshot>(
+      stream: FirebaseFirestore.instance
+          .collection('matches')
+          .where('isPublic', isEqualTo: false)
+          .snapshots(),
+      builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator());
+        }
 
-          if (snapshot.hasError) {
-            return Text('Error: ${snapshot.error}');
-          }
+        if (snapshot.hasError) {
+          return Center(child: Text('Error: ${snapshot.error}'));
+        }
 
-          if (snapshot.data == null || snapshot.data!.docs.isEmpty) {
-            return const Center(
-                child: Text('Geen privé wedstrijden beschikbaar'));
-          }
-          String owner = '';
-          return ListView(
-            children: snapshot.data!.docs.map((DocumentSnapshot document) {
-              Map<String, dynamic> data =
-                  document.data() as Map<String, dynamic>;
-              String title = data['title'] ?? '';
-              String location = data['location'] ?? '';
-              String time = data['time'] ?? '';
-              int availableSlots = data['available_slots'] ?? 0;
-              bool isPublic = data['isPublic'] ?? false;
-              if (owner != MainUser.user.documentId && owner != '') {
-                return const Text("");
-              }
-              owner = data['owner'] ?? '';
-              if (owner != MainUser.user.documentId) {
-                print("Owner private: $owner");
-                print("USER: ${MainUser.user.documentId}}");
-                return const Text("Je hebt geen prive games");
-              }
-              return ListTile(
-                title: Text(title),
-                subtitle: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text('Locatie: $location'),
-                    Text('Tijd: $time'),
-                    Text('Beschikbare plaatsen: $availableSlots'),
-                    Text(isPublic ? 'Openbaar' : 'Privé'),
-                  ],
-                ),
-                onTap: () {
-                  // Navigatielogica om naar de details van de wedstrijd te gaan
-                },
-              );
-            }).toList(),
-          );
-        },
-      ),
-    );
-  }
+        if (snapshot.data == null || snapshot.data!.docs.isEmpty) {
+          return const Center(child: Text('Geen privé wedstrijden beschikbaar'));
+        }
+
+        String owner = '';
+        var privateGames = snapshot.data!.docs.where((DocumentSnapshot document) {
+          Map<String, dynamic> data = document.data() as Map<String, dynamic>;
+          owner = data['owner'] ?? '';
+          return owner == MainUser.user.documentId;
+        }).toList();
+
+        if (privateGames.isEmpty) {
+          return const Center(child: Text('Je hebt geen prive games'));
+        }
+
+        return ListView(
+          children: privateGames.map((DocumentSnapshot document) {
+            Map<String, dynamic> data = document.data() as Map<String, dynamic>;
+            String title = data['title'] ?? '';
+            String location = data['location'] ?? '';
+            String time = data['time'] ?? '';
+            int availableSlots = data['available_slots'] ?? 0;
+            bool isPublic = data['isPublic'] ?? false;
+
+            return ListTile(
+              title: Text(title),
+              subtitle: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('Locatie: $location'),
+                  Text('Tijd: $time'),
+                  Text('Beschikbare plaatsen: $availableSlots'),
+                  Text(isPublic ? 'Openbaar' : 'Privé'),
+                ],
+              ),
+              onTap: () {
+                // Navigatielogica om naar de details van de wedstrijd te gaan
+              },
+            );
+          }).toList(),
+        );
+      },
+    ),
+  );
+}
+
 }

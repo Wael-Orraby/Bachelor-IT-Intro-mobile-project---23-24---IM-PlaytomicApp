@@ -23,9 +23,7 @@ class UserData{
     print(userName);
     print(documentId);
     print(userId);
-    userFieldsList = null;
-    userFieldTimerList = null;
-    userReservationIdList = null;
+
     CollectionReference? reservationsCollection =
         FirebaseFirestore.instance.collection('reservations');
     CollectionReference? fieldsCollection =
@@ -33,7 +31,7 @@ class UserData{
 
     // Count documents in collections
     QuerySnapshot userReservationsSnapshot =
-        await reservationsCollection.where('userId', isEqualTo: documentId).get();
+        await reservationsCollection.where('userId', isEqualTo: userId).get();
 
     List<Field> fields = [];
     List<String> timers = [];
