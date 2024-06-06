@@ -169,6 +169,7 @@ class _SignUpPageState extends State<SignUpPage> {
       });
       MainUser.user.email = email.toLowerCase();
       MainUser.getMainUser();
+      MainUser.getUserFields();
       // ignore: use_build_context_synchronously
       Navigator.pushNamed(context, "/home");
     } else {

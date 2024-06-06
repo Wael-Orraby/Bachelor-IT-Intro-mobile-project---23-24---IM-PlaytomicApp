@@ -91,12 +91,12 @@ class UserData{
           losses: userDoc['losses'],
           wins: userDoc['wins'],
         );
-        print("Get user: ${userData.documentId}");
-        print("Get user: ${userData.userName}");
-        print("Get user: ${userData.email}");
-        print("Get user: ${userData.losses}");
-        print("Get user: ${userData.wins}");
-        print("Get user: ${userData.email}");
+        // print("Get user: ${userData.documentId}");
+        // print("Get user: ${userData.userName}");
+        // print("Get user: ${userData.email}");
+        // print("Get user: ${userData.losses}");
+        // print("Get user: ${userData.wins}");
+        // print("Get user: ${userData.email}");
         return userData;
       } else {
         print('User with ID $docId not found in Firestore');

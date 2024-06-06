@@ -60,6 +60,14 @@ class WedstrijdenPage extends StatefulWidget {
     );
 
     if (playerId != null) {
+      print("@@@@@@@@@@@@@@@@@@");
+      print(time);
+      print(location);
+      print(playerId);
+      print(3);
+      print(isPublic);
+      print(3);
+      print("@@@@@@@@@@@@@@@@@@");
       // Maak de wedstrijd in de Firestore-collectie 'matches'
       DocumentReference matchRef =
           await FirebaseFirestore.instance.collection('matches').add({
@@ -69,15 +77,15 @@ class WedstrijdenPage extends StatefulWidget {
         'team2': [],
         'available_slots': 3,
         'isPublic': isPublic,
-        'owner': MainUser.user.documentId,
+        'owner': playerId,
       });
       // Verwijder de geselecteerde reservering uit de Firestore-collectie 'reservations'
       await deleteReservation(selectedField.reservationId);
 
       // Navigeer naar de juiste pagina
       Navigator.pop(context); // Sluit dialoogvenster
-      Navigator.pushNamed(
-          context, isPublic ? '/open_matches' : '/user_matches');
+      // Navigator.pushNamed(
+      //     context, isPublic ? '/open_matches' : '/user_matches');
     }
   }
 }
@@ -202,7 +210,7 @@ class _WedstrijdenState extends State<WedstrijdenPage> {
                   style: ButtonType.LIGHTBLUE,
                   text: "Privé",
                   onPressed: () {
-                    Navigator.of(context).pop(false); // Privé wedstrijd
+                    Navigator.of(context).pop(false); // Openbare wedstrijd
                   },
                 ),
               ],
@@ -214,7 +222,6 @@ class _WedstrijdenState extends State<WedstrijdenPage> {
   print("end of wiget..");
     // Als geen type wedstrijd is geselecteerd, stop dan met de methode
     if (isPublic == null){
-      print(isPublic);
       return;
     }
     else {
@@ -225,7 +232,10 @@ class _WedstrijdenState extends State<WedstrijdenPage> {
         ),
       );
     }
+
   print("new wiget normaly");
+  print(MainUser.user.userId);
+  print(MainUser.user.userName);
     // Maak de wedstrijd en verwijder de reservering
    await widget.createMatchAndDeleteReservation(context, selectedField, isPublic);
   }

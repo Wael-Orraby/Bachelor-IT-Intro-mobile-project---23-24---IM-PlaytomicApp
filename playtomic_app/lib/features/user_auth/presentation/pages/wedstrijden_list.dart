@@ -475,6 +475,7 @@ class UserWedstrijdenPage extends StatelessWidget {
               owner = data['owner'] ?? '';
               if (owner != MainUser.user.documentId) {
                 print("Owner private: $owner");
+                print("USER: ${MainUser.user.documentId}}");
                 return const Text("Je hebt geen prive games");
               }
               return ListTile(
